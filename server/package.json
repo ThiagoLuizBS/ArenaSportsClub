@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest",
-    "start": "node server",
+    "start": "node index.js",
     "dev": "nodemon server"
   },
   "keywords": [],
