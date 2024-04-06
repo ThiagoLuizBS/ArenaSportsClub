@@ -41,15 +41,16 @@ export default class newsCrawler {
             .find("a")
             .each(function (i, e) {
               var href = urlShort + $(this).attr("href");
-              var title = $(this).find("span > span").text().trim();
+              var title = $(this).find("div > div").text().trim();
 
               request(href, function (err, res, body) {
                 if (err) console.log("Error: " + err);
                 var $ = load(body);
 
-                $(
-                  "#fsNews > div.fsNews__block.fsNews__block--article > article"
-                ).each(function (idx, e) {
+                $("#fsNews > div:nth-child(1) > article").each(function (
+                  idx,
+                  e
+                ) {
                   var subtitle = $(this)
                     .find(
                       "div.fsNewsArticle__content > div.fsNewsArticle__perex"

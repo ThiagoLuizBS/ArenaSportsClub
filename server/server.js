@@ -19,18 +19,18 @@ app.use((req, res, next) => {
   next();
 });
 app.use("/api/v1/football", football);
-// app.use("*", (req, res) => res.status(404).json({ error: "not found" }));
+app.use("*", (req, res) => res.status(404).json({ error: "not found" }));
 
-// const matchs = await matchsCrawler.getMatchs();
+const matchs = await matchsCrawler.getMatchs();
 // const championships = await championshipsCrawler.getChampionships();
 // const news = await newsCrawler.getNews();
 // const teams = await teamsCrawler.getTeams();
 
-// setInterval(async () => {
-//   const post = await matchsController.apiPostMatch();
-//   const clear = await matchsCrawler.clearMatchs();
-//   console.log(post);
-// }, 90000);
+setInterval(async () => {
+  const post = await matchsController.apiPostMatch();
+  const clear = await matchsCrawler.clearMatchs();
+  console.log(post);
+}, 1800000);
 
 // setInterval(async () => {
 //   const championships = await matchsController.apiGetAllChampionships();

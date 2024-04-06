@@ -6,8 +6,9 @@ const urlToday = "/jogos-de-hoje";
 const urlYesterday = "/jogos-de-ontem";
 const urlTomorrow = "/jogos-de-amanha";
 
-//const urlDays = [url + urlToday, url + urlTomorrow];
-const urlDays = [url + urlToday, url + urlYesterday, url + urlTomorrow];
+const urlDays = [url + urlToday];
+// const urlDays = [url + urlToday, url + urlTomorrow];
+// const urlDays = [url + urlToday, url + urlYesterday, url + urlTomorrow];
 const urlGoal = "/images/goal.png";
 const urlOwnGoal = "/images/own-goal.png";
 const urlYC = "/images/yellowcard.png";
@@ -753,6 +754,7 @@ export default class matchsCrawler {
           });
         });
       });
+      console.log("Finished matchs");
       return matchs;
     }
   }
