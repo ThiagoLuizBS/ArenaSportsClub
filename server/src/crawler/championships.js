@@ -79,7 +79,7 @@ const statistics = [];
 export default class championshipsCrawler {
   static async clearChampionships() {
     try {
-      console.log(championships.length, "clear championships");
+      console.log("championships - clear ", championships.length);
       championships.splice(0, Infinity);
       const championshipsUpdated = await this.getChampionships();
       return;
@@ -95,7 +95,7 @@ export default class championshipsCrawler {
       allUrls.forEach((element) => {
         urls.push(element);
       });
-      console.log(urls.length, "length urls championships");
+      console.log("championships - urls", urls.length);
       return;
     } catch (error) {
       console.error(`Unable to get urls championships: ${error}`);
@@ -104,10 +104,11 @@ export default class championshipsCrawler {
   }
 
   static async getChampionships() {
-    console.log(championships.length, "get championships");
-    if (championships.length != 0) return championships;
-    else {
-      console.log("scrap championships");
+    if (championships.length != 0) {
+      console.log("championships - get", championships.length);
+      return championships;
+    } else {
+      console.log("championships - scrap ");
       table.splice(0, Infinity);
       statistics.splice(0, Infinity);
       urls.forEach((url) => {

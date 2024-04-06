@@ -24,46 +24,46 @@ function dataHorarioAtual() {
 }
 
 async function scrapMatchs() {
-  console.log("Started matchs", dataHorarioAtual());
+  console.log("matchs - started", dataHorarioAtual());
   const clear = await matchsCrawler.clearMatchs();
-  console.log("cleared matchs", dataHorarioAtual());
+  console.log("matchs - renewed", dataHorarioAtual());
   setTimeout(async () => {
     const post = await matchsController.apiPostMatch();
-    console.log(post, dataHorarioAtual());
+    console.log("matchs -", post, dataHorarioAtual());
   }, 60000);
 }
 
 async function scrapChampionships() {
-  console.log("Started championships", dataHorarioAtual());
+  console.log("championships - started", dataHorarioAtual());
   const championships = await matchsController.apiGetAllChampionships();
   const champs = await championshipsCrawler.getUrls(championships);
   const clear = await championshipsCrawler.clearChampionships();
-  console.log("cleared and get url championships", dataHorarioAtual());
+  console.log("championships - renewed", dataHorarioAtual());
   setTimeout(async () => {
     const post = await championshipsController.apiPostChampionships();
-    console.log(post, dataHorarioAtual());
+    console.log("championships -", post, dataHorarioAtual());
   }, 60000);
 }
 
 async function scrapTeams() {
-  console.log("Started teams", dataHorarioAtual());
+  console.log("teams - started", dataHorarioAtual());
   const teams = await matchsController.apiGetAllTeams();
   const urls = await teamsCrawler.getUrls(teams);
   const clear = await teamsCrawler.clearTeams();
-  console.log("cleared and get url teams", dataHorarioAtual());
+  console.log("teams - renewed", dataHorarioAtual());
   setTimeout(async () => {
     const post = await teamsController.apiPostTeams();
-    console.log(post, dataHorarioAtual());
+    console.log("teams -", post, dataHorarioAtual());
   }, 60000);
 }
 
 async function scrapNews() {
-  console.log("Started news", dataHorarioAtual());
+  console.log("news - started", dataHorarioAtual());
   const clear = await newsCrawler.clearNews();
-  console.log("cleared news", dataHorarioAtual());
+  console.log("news - renewed", dataHorarioAtual());
   setTimeout(async () => {
     const post = await newsController.apiPostNews();
-    console.log(post, dataHorarioAtual());
+    console.log("news -", post, dataHorarioAtual());
   }, 60000);
 }
 
@@ -82,6 +82,11 @@ setTimeout(() => {
 }, 600000);
 
 setTimeout(() => {
+  scrapNews();
+  setInterval(scrapNews, 1800000);
+}, 900000);
+
+setTimeout(() => {
   scrapTeams();
   setInterval(scrapTeams, 1800000);
 }, 1200000);
@@ -91,16 +96,11 @@ setTimeout(() => {
   setInterval(scrapChampionships, 1800000);
 }, 1800000);
 
-setTimeout(() => {
-  scrapNews();
-  setInterval(scrapNews, 1800000);
-}, 900000);
-
 /* --------------------- Atualizar partidas de ontem para CANCELADO caso não tenha resultado final --------------------------- */
 // setTimeout(async () => {
 //   const updateYesterday = await matchsController.apiUpdateYesterdayMatchs();
 //   console.log(updateYesterday);
-// }, 18000);
+// }, 1000);
 
 /* --------------------- API testes --------------------------- */
 // app.get("/test", (req, res) => {

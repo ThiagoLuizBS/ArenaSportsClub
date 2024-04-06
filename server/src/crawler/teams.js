@@ -11,7 +11,7 @@ const titles = [];
 export default class teamsCrawler {
   static async clearTeams() {
     try {
-      console.log(teams.length, "clear teams");
+      console.log("teams - clear", teams.length);
       teams.splice(0, Infinity);
       const teamsUpdated = await this.getTeams();
       return;
@@ -27,7 +27,7 @@ export default class teamsCrawler {
       allUrls.forEach((element) => {
         urls.push(element);
       });
-      console.log(urls.length, "length urls teams");
+      console.log("teams - urls", urls.length);
       return;
     } catch (error) {
       console.error(`Unable to get urls teams: ${error}`);
@@ -36,10 +36,11 @@ export default class teamsCrawler {
   }
 
   static async getTeams() {
-    console.log(teams.length, "get teams");
-    if (teams.length != 0) return teams;
-    else {
-      console.log("scrap teams");
+    if (teams.length != 0) {
+      console.log("teams - get", teams.length);
+      return teams;
+    } else {
+      console.log("teams - scrap");
       infos.splice(0, Infinity);
       titles.splice(0, Infinity);
       urls.forEach((url) => {

@@ -30,7 +30,7 @@ const lineupAwayB = [];
 export default class matchsCrawler {
   static async clearMatchs() {
     try {
-      console.log(matchs.length, "clear matchs");
+      console.log("matchs - clear", matchs.length);
       matchs.splice(0, Infinity);
       const matchsUpdated = await this.getMatchs();
       return;
@@ -41,10 +41,11 @@ export default class matchsCrawler {
   }
 
   static async getMatchs() {
-    console.log(matchs.length, "get matchs");
-    if (matchs.length != 0) return matchs;
-    else {
-      console.log("scrap matchs");
+    if (matchs.length != 0) {
+      console.log("matchs - get", matchs.length);
+      return matchs;
+    } else {
+      console.log("matchs - scrap");
       events.splice(0, Infinity);
       statistics.splice(0, Infinity);
       lineupHomeS.splice(0, Infinity);
