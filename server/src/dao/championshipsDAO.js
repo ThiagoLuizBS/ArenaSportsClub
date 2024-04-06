@@ -126,6 +126,7 @@ export default class championshipsDAO {
         { url: championship.url },
         {
           $set: {
+            name: championship.name,
             table: championship.table,
             statistics: championship.statistics,
           },

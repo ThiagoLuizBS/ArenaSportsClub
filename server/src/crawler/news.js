@@ -8,6 +8,7 @@ const news = [];
 export default class newsCrawler {
   static async clearNews() {
     try {
+      console.log(news.length, "clear news");
       news.splice(0, Infinity);
       const newsUpdated = await this.getNews();
       return;
@@ -18,8 +19,10 @@ export default class newsCrawler {
   }
 
   static async getNews() {
+    console.log(news.length, "get news");
     if (news.length != 0) return news;
     else {
+      console.log("scrap news");
       news.splice(0, Infinity);
       request(url, function (err, res, body) {
         if (err) console.log("Error: " + err);
