@@ -78,22 +78,22 @@ app.use("*", (req, res) => res.status(404).json({ error: "not found" }));
 
 setTimeout(() => {
   scrapMatchs();
-  setInterval(scrapMatchs, 1800000);
+  setInterval(scrapMatchs, process.env.CRAWLERINTERVAL);
 }, 600000);
 
 setTimeout(() => {
   scrapNews();
-  setInterval(scrapNews, 1800000);
+  setInterval(scrapNews, process.env.CRAWLERINTERVAL);
 }, 900000);
 
 setTimeout(() => {
   scrapTeams();
-  setInterval(scrapTeams, 1800000);
+  setInterval(scrapTeams, process.env.CRAWLERINTERVALLONG);
 }, 1200000);
 
 setTimeout(() => {
   scrapChampionships();
-  setInterval(scrapChampionships, 1800000);
+  setInterval(scrapChampionships, process.env.CRAWLERINTERVAL);
 }, 1800000);
 
 /* --------------------- Atualizar partidas de ontem para CANCELADO caso não tenha resultado final --------------------------- */

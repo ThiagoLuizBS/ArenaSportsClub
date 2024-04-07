@@ -39,6 +39,11 @@ export function Search(props) {
     setSearchField("");
   };
 
+  const formatChampionshipTitle = (name) => {
+    const lastIndex = name.lastIndexOf("-");
+    return name.slice(0, lastIndex).trim();
+  };
+
   return (
     <ListGroup id={theme === "nav" ? "" : "display-search"}>
       {typeof listTeams === "undefined" ? (
@@ -66,7 +71,9 @@ export function Search(props) {
                 </Col>
                 <Col md={10} sm={10} xs={10} className="col-search">
                   <Row>
-                    <span className="name-search">{team.name}</span>
+                    <span className="name-search">
+                      {formatChampionshipTitle(team.name)}
+                    </span>
                   </Row>
                   <Row>
                     <span className="locality-search">{team.locality}</span>

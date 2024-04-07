@@ -45,17 +45,23 @@ export function Header() {
   };
 
   useEffect(() => {
-    if (searchField === "") {
-      setListTeams([]);
-      setListChamps([]);
-    } else {
-      TeamDataService.getTeams(searchField).then((response) => {
-        setListTeams(response.data.team);
-      });
-      ChampionshipDataService.getChampionships(searchField).then((response) => {
-        setListChamps(response.data.championship);
-      });
-    }
+    const debounceSearch = setTimeout(() => {
+      if (searchField === "") {
+        setListTeams([]);
+        setListChamps([]);
+      } else {
+        TeamDataService.getTeams(searchField).then((response) => {
+          setListTeams(response.data.team);
+        });
+        ChampionshipDataService.getChampionships(searchField).then(
+          (response) => {
+            setListChamps(response.data.championship);
+          }
+        );
+      }
+    }, 300); // 300 milissegundos de delay
+
+    return () => clearTimeout(debounceSearch);
   }, [searchField]);
 
   const submitHandler = (e) => {

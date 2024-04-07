@@ -164,6 +164,11 @@ export function SideBar({
     else setButtonExpand(true);
   };
 
+  const formatChampionshipTitle = (name) => {
+    const lastIndex = name.lastIndexOf("-");
+    return name.slice(0, lastIndex).trim();
+  };
+
   return (
     <Container id="container-side-bar">
       {width < 768 ? (
@@ -232,7 +237,7 @@ export function SideBar({
                         id="name-camp-sidebar"
                         className="col-sidebar"
                       >
-                        <span>{favorito.name}</span>
+                        <span>{formatChampionshipTitle(favorito.name)}</span>
                       </Col>
                       <Col md={1} sm={1} xs={1} className="col-sidebar-left">
                         <Button
@@ -296,7 +301,9 @@ export function SideBar({
                         id="name-camp-sidebar"
                         className="col-sidebar"
                       >
-                        <span>{championship.name}</span>
+                        <span>
+                          {formatChampionshipTitle(championship.name)}
+                        </span>
                       </Col>
                       <Col md={1} sm={1} xs={1} className="col-sidebar-left">
                         <Button
