@@ -71,9 +71,7 @@ export function Search(props) {
                 </Col>
                 <Col md={10} sm={10} xs={10} className="col-search">
                   <Row>
-                    <span className="name-search">
-                      {formatChampionshipTitle(team.name)}
-                    </span>
+                    <span className="name-search">{team.name}</span>
                   </Row>
                   <Row>
                     <span className="locality-search">{team.locality}</span>
@@ -103,7 +101,9 @@ export function Search(props) {
                 </Col>
                 <Col md={10} sm={10} xs={10} className="col-search">
                   <Row>
-                    <span className="name-search">{champ.name}</span>
+                    <span className="name-search">
+                      {formatChampionshipTitle(champ.name)}
+                    </span>
                   </Row>
                 </Col>
               </Row>

@@ -20,9 +20,21 @@ export default class matchsDAO {
   static async getMatchMaxID() {
     let maxId;
     try {
-      maxId = await matchs.find().sort({ idMatch: -1 }).limit(1);
-      const teamsList = await maxId.toArray();
-      const idMaxMatch = teamsList[0].idMatch;
+      const pipeline = [
+        {
+          $addFields: {
+            numericIdMatch: { $toInt: "$idMatch" }, // Converte idMatch de string para inteiro
+          },
+        },
+        {
+          $sort: {
+            numericIdMatch: -1,
+          },
+        },
+        { $limit: 1 },
+      ];
+      maxId = await matchs.aggregate(pipeline).toArray();
+      const idMaxMatch = maxId[0].idMatch;
       return await idMaxMatch;
     } catch (e) {
       console.error(`Something went wrong in getMatchMaxID: ${e}`);
