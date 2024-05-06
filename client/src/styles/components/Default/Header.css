@@ -81,7 +81,7 @@ a.dropdown-toggle::after {
 }
 
 a.link-header {
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 1rem;
   color: rgb(0, 0, 0, 0.6);
   text-decoration: none;
   border-top: 3px solid #aecdbc;
@@ -97,7 +97,7 @@ a.brand-header {
 a.match-header,
 a.championship-header {
   text-decoration: none;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 1rem;
   border-top: 3px solid #aecdbc;
   border-bottom: 3px solid #4a8464;
   color: rgb(0, 0, 0, 0.9);

@@ -46,6 +46,7 @@ div.col-news {
 }
 
 .img-news {
+  min-width: 192px;
   width: 192px;
   border-radius: 8px;
 }

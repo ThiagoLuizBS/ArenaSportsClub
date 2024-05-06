@@ -136,6 +136,23 @@ export function Header() {
                   NOTÍCIAS
                 </span>
               </Link>
+              <Link
+                to="/previsoes"
+                className={
+                  location.pathname === "/previsoes"
+                    ? "match-header"
+                    : "link-header"
+                }
+              >
+                <img
+                  src="https://cdn-icons-png.flaticon.com/512/831/831610.png"
+                  alt="Search"
+                  className="nav-img"
+                />{" "}
+                <span className="nav-font" title="Previsões">
+                  PREVISÕES
+                </span>
+              </Link>
             </Nav>
             <Form
               className="d-flex"

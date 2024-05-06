@@ -69,6 +69,7 @@ export function Match() {
                   <span>{listMatch.championship}</span>
                 )}
               </div>
+
               <Col md={12} sm={12} xs={12} id="row-content-match">
                 <div className="content-match">
                   <Col md={4} sm={4} xs={4} className="col-content-match">

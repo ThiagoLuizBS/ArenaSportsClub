@@ -11,6 +11,7 @@ import { Home } from "./pages/Home";
 import { Match } from "./pages/Match";
 import { News } from "./pages/News";
 import { Championship } from "./pages/Championship";
+import { Predictions } from "./pages/Predictions";
 
 export function AppRoutes() {
   return (
@@ -19,6 +20,7 @@ export function AppRoutes() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/noticias" element={<News />} />
+        <Route path="/previsoes" element={<Predictions />} />
         <Route path="/campeonato/:id" element={<Championship />} />
         <Route path="/partida/:id" element={<Match />} />
         <Route path="/equipe/:id" element={<Team />} />

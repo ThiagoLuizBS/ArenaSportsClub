@@ -1,0 +1,22 @@
+.predictions-container {
+  margin: 32px 0;
+}
+
+.predictions-container h1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.predictions-container h5 {
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-predict {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
