@@ -28,6 +28,7 @@
 
 .link-team-match:hover {
   color: black;
+  text-decoration: underline;
 }
 
 .content-match {

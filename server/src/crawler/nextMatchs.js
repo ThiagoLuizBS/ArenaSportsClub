@@ -119,16 +119,13 @@ export default class nextMatchsCrawler {
                 "#livescore > div:nth-child(1) > div:nth-child(1) > div > div.row.match-card-second-row.justify-content-md-center > div:nth-child(1) > a"
               )
               .attr("href");
-            if (teamHomeHref !== "" && teamHomeHref)
-              teamHomeHref = teamHomeHref.replace(".html", "");
-            else teamHomeHref = "";
 
             var teamAwayHref = $(this)
               .find(
                 "#livescore > div:nth-child(1) > div:nth-child(1) > div > div.row.match-card-second-row.justify-content-md-center > div:nth-child(3) > a"
               )
               .attr("href");
-            teamAwayHref = teamAwayHref.replace(".html", "");
+
             var dateTime = $(this)
               .find(
                 "#livescore > div:nth-child(1) > div.match-details > p:nth-child(1)"

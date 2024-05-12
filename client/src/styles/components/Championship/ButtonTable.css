@@ -22,12 +22,15 @@ table {
 
 th,
 td {
-  border: 1px solid #ddd;
   white-space: nowrap;
 }
 
-th:not(:nth-child(2)),
-td:not(:nth-child(2)) {
+tbody tr {
+  border-bottom: 1px solid #00897b;
+}
+
+th,
+td {
   min-width: 80px; /* Define uma largura mínima para as outras colunas */
 }
 
@@ -44,8 +47,10 @@ td:not(:nth-child(2)) {
 }
 
 .butTable-header {
+  display: flex;
+  flex-direction: column;
   text-align: center;
-  padding: 10px 0;
+  padding: 8px;
   font-weight: 700;
   font-size: 18px;
 }
@@ -53,12 +58,12 @@ td:not(:nth-child(2)) {
 #text-point {
   font-weight: bolder;
   text-align: center;
-  padding: 0.5rem 0.8rem;
+  padding: 0.4rem 0.8rem;
 }
 
 #text-value-center {
   text-align: center;
-  padding: 0.5rem 0.8rem;
+  padding: 0.4rem 0.8rem;
   width: 400px;
 }
 

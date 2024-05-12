@@ -333,11 +333,12 @@ function ButtonExtraTable({ actived, championship }) {
                   ))}
                 </tbody>
               </table>
-
+            </div>
+            <div className="butTable-header">
               {championship?.extraTable?.map(
                 (scores, i) =>
                   scores.notes && (
-                    <span key={i} className="butTable-header">
+                    <span key={i} style={{ width: "100%" }}>
                       {scores.team}: {scores.notes}
                     </span>
                   )

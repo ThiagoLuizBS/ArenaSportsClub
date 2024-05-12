@@ -73,12 +73,17 @@ export function Match() {
               <Col md={12} sm={12} xs={12} id="row-content-match">
                 <div className="content-match">
                   <Col md={4} sm={4} xs={4} className="col-content-match">
-                    <img
-                      src={listMatch.teams.homeImg}
-                      alt={`${listMatch.teams.homeName}`}
-                      title={`${listMatch.teams.homeName}`}
-                      className="img-content-match"
-                    />
+                    <Link
+                      to={`/equipe/${listMatch.teams.homeId}`}
+                      className="link-team-match"
+                    >
+                      <img
+                        src={listMatch.teams.homeImg}
+                        alt={`${listMatch.teams.homeName}`}
+                        title={`${listMatch.teams.homeName}`}
+                        className="img-content-match"
+                      />
+                    </Link>
                   </Col>
                   <Col md={4} sm={4} xs={4} id="col-results-match">
                     <span className="number-results-match">
@@ -90,12 +95,17 @@ export function Match() {
                     </span>
                   </Col>
                   <Col md={4} sm={4} xs={4} className="col-content-match">
-                    <img
-                      src={listMatch.teams.awayImg}
-                      alt={`${listMatch.teams.awayName}`}
-                      title={`${listMatch.teams.awayName}`}
-                      className="img-content-match"
-                    />
+                    <Link
+                      to={`/equipe/${listMatch.teams.awayId}`}
+                      className="link-team-match"
+                    >
+                      <img
+                        src={listMatch.teams.awayImg}
+                        alt={`${listMatch.teams.awayName}`}
+                        title={`${listMatch.teams.awayName}`}
+                        className="img-content-match"
+                      />
+                    </Link>
                   </Col>
                   <Col md={4} sm={4} xs={4} className="col-content-match">
                     {listMatch.teams.homeId !== "" ? (

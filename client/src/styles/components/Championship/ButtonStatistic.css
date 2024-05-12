@@ -26,23 +26,23 @@
 
 #text-center {
   text-align: center;
-  padding: 0.5rem 0.8rem;
+  padding: 0.4rem 0.8rem;
 }
 
 #text-left {
   text-align: left;
-  padding: 0.5rem 0.8rem;
+  padding: 0.4rem 0.8rem;
 }
 
 #text-goals {
   font-weight: bolder;
   text-align: center;
-  padding: 0.5rem 0.8rem;
+  padding: 0.4rem 0.8rem;
 }
 
 #text-value-center-sta {
   text-align: center;
-  padding: 0.5rem 0.8rem;
+  padding: 0.4rem 0.8rem;
   width: 300px;
 }
 
