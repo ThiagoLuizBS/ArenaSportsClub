@@ -637,7 +637,7 @@ export default class matchsDAO {
 
   static async getAllHomeTeams() {
     var data = new Date();
-    data.setDate(data.getDate() - 1);
+    data.setDate(data.getDate());
     try {
       const pipeline = [
         {
@@ -671,7 +671,7 @@ export default class matchsDAO {
 
   static async getAllAwayTeams() {
     var data = new Date();
-    data.setDate(data.getDate() - 1);
+    data.setDate(data.getDate());
     try {
       const pipeline = [
         {

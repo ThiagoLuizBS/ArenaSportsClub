@@ -100,6 +100,21 @@ export default class championshipsDAO {
     }
   }
 
+  static async getChampionshipExtraDataByUrl(url) {
+    try {
+      const pipeline = [
+        {
+          $match: { fbref: url },
+        },
+      ];
+      let founded = await championships.aggregate(pipeline).toArray();
+      return await founded.length;
+    } catch (e) {
+      console.error(`Something went wrong in getChampionshipByUrl: ${e}`);
+      throw e;
+    }
+  }
+
   static async addChampionship(championship, id) {
     try {
       const championshipDoc = {
@@ -140,6 +155,24 @@ export default class championshipsDAO {
     }
   }
 
+  static async updateChampionshipExtraData(championship) {
+    try {
+      const updateResponse = await championships.updateOne(
+        { fbref: championship.url },
+        {
+          $set: {
+            extraTable: championship.table,
+          },
+        }
+      );
+
+      return updateResponse;
+    } catch (e) {
+      console.error(`Unable to update championship: ${e}`);
+      return { error: e };
+    }
+  }
+
   static async getChampionshipById(id) {
     try {
       const pipeline = [
@@ -167,6 +200,33 @@ export default class championshipsDAO {
       return await championships.aggregate(pipeline).toArray();
     } catch (e) {
       console.error(`Something went wrong in getChampionshipPriority: ${e}`);
+      throw e;
+    }
+  }
+
+  static async getAllExtraDataChampionships() {
+    try {
+      const pipeline = [
+        {
+          $group: {
+            _id: {
+              fbref: "$fbref",
+            },
+            count: { $count: {} },
+          },
+        },
+        {
+          $sort: {
+            count: -1,
+          },
+        },
+      ];
+
+      return await championships.aggregate(pipeline).toArray();
+    } catch (e) {
+      console.error(
+        `Something went wrong in getAllExtraDataChampionships: ${e}`
+      );
       throw e;
     }
   }

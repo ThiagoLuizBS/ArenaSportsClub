@@ -10,18 +10,14 @@ import UserDataService from "../services/user";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 import { useParams } from "react-router-dom";
 import "../styles/pages/Championship.css";
+import ButtonExtraTable from "../components/Championship/ButtonExtraTable";
 
 export function Championship() {
   let { id } = useParams();
   const { authenticated } = useContext(Context);
   const [loading, setLoading] = useState(true);
   const [championship, setChampionship] = useState([]);
-  const [buttonChange, setButtonChange] = useState({
-    result: true,
-    calendar: false,
-    table: false,
-    statistic: false,
-  });
+  const [buttonChange, setButtonChange] = useState("results");
   const [favoritesChamp, setFavoritesChamp] = useState(
     JSON.parse(window.localStorage.getItem("favorites-champ")) || []
   );
@@ -98,38 +94,6 @@ export function Championship() {
       (champ) => champ.idChampionship === championship.idChampionship
     );
 
-  const changeSelected = (buttonName) => {
-    if (buttonName === "buttonResume") {
-      setButtonChange({
-        result: true,
-        calendar: false,
-        table: false,
-        statistic: false,
-      });
-    } else if (buttonName === "buttonMatchs") {
-      setButtonChange({
-        result: false,
-        calendar: true,
-        table: false,
-        statistic: false,
-      });
-    } else if (buttonName === "buttonTable") {
-      setButtonChange({
-        result: false,
-        calendar: false,
-        table: true,
-        statistic: false,
-      });
-    } else {
-      setButtonChange({
-        result: false,
-        calendar: false,
-        table: false,
-        statistic: true,
-      });
-    }
-  };
-
   return (
     <Container>
       {loading ? (
@@ -174,65 +138,82 @@ export function Championship() {
           <div className="button-group-championship">
             <Button
               id={
-                buttonChange.result
+                buttonChange === "results"
                   ? "button-championship-selected"
                   : "button-championship"
               }
               title="Resultados"
-              onClick={() => changeSelected("buttonResume")}
+              onClick={() => setButtonChange("results")}
             >
               RESULTADOS
             </Button>
             <Button
               id={
-                buttonChange.calendar
+                buttonChange === "calendar"
                   ? "button-championship-selected"
                   : "button-championship"
               }
               title="Calendário"
-              onClick={() => changeSelected("buttonMatchs")}
+              onClick={() => setButtonChange("calendar")}
             >
               CALENDÁRIO
             </Button>
             <Button
               id={
-                buttonChange.table
+                buttonChange === "classification"
                   ? "button-championship-selected"
                   : "button-championship"
               }
-              title="Tabela"
-              onClick={() => changeSelected("buttonTable")}
+              title="Classificação"
+              onClick={() => setButtonChange("classification")}
             >
-              TABELA
+              CLASSIFICAÇÃO
             </Button>
             <Button
               id={
-                buttonChange.statistic
+                buttonChange === "statistic"
                   ? "button-championship-selected"
                   : "button-championship"
               }
               title="Estatísticas"
-              onClick={() => changeSelected("buttonStatistic")}
+              onClick={() => setButtonChange("statistic")}
             >
               ESTATÍSTICAS
             </Button>
+            {championship.extraTable && (
+              <Button
+                id={
+                  buttonChange === "fullTable"
+                    ? "button-championship-selected"
+                    : "button-championship"
+                }
+                title="Estatísticas"
+                onClick={() => setButtonChange("fullTable")}
+              >
+                TABELA COMPLETA
+              </Button>
+            )}
           </div>
 
           <div>
             <ButtonResume
-              actived={buttonChange.result}
+              actived={buttonChange === "results"}
               championship={championship}
             />
             <ButtonMatchs
-              actived={buttonChange.calendar}
+              actived={buttonChange === "calendar"}
               championship={championship}
             />
             <ButtonTable
-              actived={buttonChange.table}
+              actived={buttonChange === "classification"}
               championship={championship}
             />
             <ButtonStatistic
-              actived={buttonChange.statistic}
+              actived={buttonChange === "statistic"}
+              championship={championship}
+            />
+            <ButtonExtraTable
+              actived={buttonChange === "fullTable"}
               championship={championship}
             />
           </div>

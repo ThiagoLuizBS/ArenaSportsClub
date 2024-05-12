@@ -1,6 +1,5 @@
 import React from "react";
 import Container from "react-bootstrap/Container";
-import Table from "react-bootstrap/Table";
 import "../../styles/components/Championship/ButtonTable.css";
 
 function ButtonTable({ actived, championship }) {
@@ -32,10 +31,10 @@ function ButtonTable({ actived, championship }) {
                       </div>
                     )}
                   </div>
-                  <Table className="table-hover">
-                    <thead className="table-bordered">
+                  <table>
+                    <thead className="table-head-color">
                       <tr>
-                        <th> </th>
+                        <th id="text-center">P</th>
                         <th id="text-value-center">Equipe</th>
                         <th id="text-center">Pontos</th>
                         <th id="text-center">J</th>
@@ -48,7 +47,7 @@ function ButtonTable({ actived, championship }) {
                     <tbody>
                       {champ?.table.map((scores, i) => (
                         <tr key={i}>
-                          <td id="text-center">{i + 1}</td>
+                          <td id="text-point">{i + 1}</td>
                           <td id="text-value-center">{scores.team}</td>
                           <td id="text-point">{scores.points}</td>
                           <td id="text-center">{scores.games}</td>
@@ -59,7 +58,7 @@ function ButtonTable({ actived, championship }) {
                         </tr>
                       ))}
                     </tbody>
-                  </Table>
+                  </table>
                 </div>
               ))
             )}

@@ -2,11 +2,86 @@ import matchsCrawler from "../crawler/matchs.js";
 import championshipsDAO from "../dao/championshipsDAO.js";
 import teamsDAO from "../dao/teamsDAO.js";
 import matchsDAO from "../dao/matchsDAO.js";
+import nextMatchsCrawler from "../crawler/nextMatchs.js";
 
 export default class matchsController {
   static async apiPostMatch() {
     try {
       const matchs = await matchsCrawler.getMatchs();
+      let matchTitle;
+      let maxId;
+      let championshipId = "";
+      let teamHomeId = "";
+      let teamAwayId = "";
+
+      for (let index = 0; index < matchs.length; index++) {
+        matchTitle = await matchsDAO.getMatchByTitle(matchs[index].idTitle);
+        if (matchTitle === 0) {
+          maxId = await matchsDAO.getMatchMaxID();
+          championshipId =
+            await championshipsDAO.getChampionshipByChampionshipUrl(
+              matchs[index].championshipUrl
+            );
+          championshipId = championshipId[0]?.idChampionship;
+          if (championshipId === undefined) championshipId = "";
+          maxId = parseInt(maxId) + 1;
+          const MatchResponse = await matchsDAO.addMatch(
+            matchs[index],
+            maxId.toString(),
+            championshipId
+          );
+
+          var { error } = MatchResponse;
+          if (error) {
+            return { error };
+          }
+        } else if (matchs[index]?.idTitle !== undefined) {
+          if (
+            matchs[index].idChampionship !== "" &&
+            matchs[index].idChampionship !== null
+          ) {
+            championshipId = matchs[index].idChampionship;
+          } else {
+            championshipId =
+              await championshipsDAO.getChampionshipByChampionshipUrl(
+                matchs[index].championshipUrl
+              );
+            championshipId = championshipId[0]?.idChampionship;
+            if (championshipId === undefined) championshipId = "";
+          }
+          teamHomeId = await teamsDAO.getTeamByTeamUrl(
+            matchs[index].teams.teamHomeHref
+          );
+          teamHomeId = teamHomeId[0]?.idTeam;
+          if (teamHomeId === undefined) teamHomeId = "";
+          teamAwayId = await teamsDAO.getTeamByTeamUrl(
+            matchs[index].teams.teamAwayHref
+          );
+          teamAwayId = teamAwayId[0]?.idTeam;
+          if (teamAwayId === undefined) teamAwayId = "";
+
+          const MatchResponse = await matchsDAO.updateMatch(
+            matchs[index],
+            championshipId,
+            teamHomeId,
+            teamAwayId
+          );
+
+          var { error } = MatchResponse;
+          if (error) {
+            return { error };
+          }
+        }
+      }
+      return { status: "success matchs" };
+    } catch (error) {
+      return { errorapiPostMatch: error.message };
+    }
+  }
+
+  static async apiPostNextMatch() {
+    try {
+      const matchs = await nextMatchsCrawler.getMatchs();
       let matchTitle;
       let maxId;
       let championshipId = "";
@@ -267,6 +342,26 @@ export default class matchsController {
     }
   }
 
+  static async apiGetAllExtraDataChampionships(req, res, next) {
+    try {
+      const championships =
+        await championshipsDAO.getAllExtraDataChampionships();
+      var { error } = championships;
+      if (error) {
+        return { error };
+      }
+      let array = [];
+      championships.forEach((element) => {
+        if (element._id.fbref !== "" && element._id.fbref !== null)
+          array.push(element._id.fbref);
+      });
+      return array;
+    } catch (e) {
+      console.log(`api, ${e}`);
+      return { errorapiGetAllChampionships: e.message };
+    }
+  }
+
   // static async apiDelete(req, res, next) {
   //   try {
   //     const result = await matchsDAO.getDelete();
@@ -277,10 +372,9 @@ export default class matchsController {
   //   }
   // }
 
-  static async apiGetAllTeams(req, res, next) {
+  static async apiGetAllTeamsHome(req, res, next) {
     try {
       const teams = await matchsDAO.getAllHomeTeams();
-      const teams2 = await matchsDAO.getAllAwayTeams();
       var { error } = teams;
       if (error) {
         return { error };
@@ -290,12 +384,24 @@ export default class matchsController {
         if (element._id.teamHref !== "" && element._id.teamHref !== null)
           array.push(element._id.teamHref);
       });
-      teams2.forEach((element) => {
+      return array;
+    } catch (e) {
+      console.log(`api, ${e}`);
+      return { error: e.message };
+    }
+  }
+
+  static async apiGetAllTeamsAway(req, res, next) {
+    try {
+      const teams = await matchsDAO.getAllAwayTeams();
+      var { error } = teams;
+      if (error) {
+        return { error };
+      }
+      let array = [];
+      teams.forEach((element) => {
         if (element._id.teamHref !== "" && element._id.teamHref !== null)
           array.push(element._id.teamHref);
-      });
-      array = array.filter((element, index) => {
-        return array.indexOf(element) === index;
       });
       return array;
     } catch (e) {

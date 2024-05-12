@@ -154,7 +154,7 @@ export function Match() {
                       title="Sumário"
                       onClick={() => changeSelected("buttonSum")}
                     >
-                      SUMÁRIO
+                      RESUMO
                     </Button>
                     <Button
                       id={

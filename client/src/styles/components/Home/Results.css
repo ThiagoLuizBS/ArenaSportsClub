@@ -50,7 +50,6 @@ hr.border-match {
 }
 
 .match-number-results {
-  background-color: antiquewhite;
   color: black;
   padding: 0 0.4rem;
   font-size: 1.5rem;
@@ -66,11 +65,14 @@ hr.border-match {
   padding-top: 1rem;
   padding-bottom: 1rem;
   gap: 1rem;
+  position: sticky;
 }
 
 select.form-results {
   color: antiquewhite;
-  border-radius: 0.75rem;
+  font-weight: bold;
+  border-radius: 8px;
+  align-items: center;
   padding: 0.5rem;
   background-color: rgb(131, 125, 125);
   border-color: rgb(131, 125, 125);
@@ -89,8 +91,9 @@ button.button-filter {
   padding: 0.5rem;
   background-color: rgb(131, 125, 125);
   border-color: rgb(131, 125, 125);
-  border-radius: 0.75rem;
+  border-radius: 8px;
   align-items: center;
+  font-weight: bold;
 }
 
 button.button-filter:disabled {
@@ -100,8 +103,8 @@ button.button-filter:disabled {
 }
 
 button.button-filter:hover {
-  background-color: rgb(175, 173, 173);
-  border-color: rgb(131, 125, 125);
+  background-color: #5b8682;
+  border-color: #5b8682;
 }
 
 button.button-filter-selected {
@@ -109,8 +112,9 @@ button.button-filter-selected {
   padding: 0.5rem;
   background-color: #00897b;
   border-color: #00897b;
-  border-radius: 0.75rem;
+  border-radius: 8px;
   align-items: center;
+  font-weight: bold;
 }
 
 button.button-filter-selected:hover {

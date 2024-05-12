@@ -66,7 +66,7 @@ function ResultsChampionship({ matchsData, buttonExpand, setButtonExpand }) {
 
   return matchsData?.map((date, i) =>
     haveMatchs(date) ? (
-      <div key={i}>
+      <div key={i} style={{ margin: "2px" }}>
         <div className="championship-results">
           <Col
             md={1}

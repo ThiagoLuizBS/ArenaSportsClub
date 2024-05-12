@@ -55,21 +55,23 @@
   color: aliceblue;
   background-color: rgb(131, 125, 125);
   border-color: rgb(131, 125, 125);
-  border-radius: 10px;
+  border-radius: 8px;
   align-items: center;
+  font-weight: bold;
 }
 
 #button-match:hover {
-  background-color: rgb(175, 173, 173);
-  border-color: rgb(131, 125, 125);
+  background-color: #5b8682;
+  border-color: #5b8682;
 }
 
 #button-match-selected {
   color: aliceblue;
   background-color: #00897b;
   border-color: #00897b;
-  border-radius: 10px;
+  border-radius: 8px;
   align-items: center;
+  font-weight: bold;
 }
 
 #row-content-match {

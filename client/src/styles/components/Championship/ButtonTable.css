@@ -4,40 +4,61 @@
   padding: 0;
 }
 
+.table-head-color {
+  color: aliceblue;
+  background-color: #4a8464;
+}
+
+div.table-responsive {
+  overflow-x: auto;
+  display: block;
+}
+
+table {
+  min-width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+th,
+td {
+  border: 1px solid #ddd;
+  white-space: nowrap;
+}
+
+th:not(:nth-child(2)),
+td:not(:nth-child(2)) {
+  min-width: 80px; /* Define uma largura mínima para as outras colunas */
+}
+
 .butTable-section {
+  width: 100%;
   overflow-x: auto;
   display: flex;
-  padding: 10px;
-  margin-top: 1.1ch;
-  margin-bottom: 1.1ch;
+  margin-top: 1ch;
+  margin-bottom: 1ch;
   background-color: #e8faf0;
   border-radius: 8px;
-  font-family: "Lucida Console", "Courier New", monospace;
   flex-direction: column;
   margin-bottom: 30px;
 }
 
 .butTable-header {
   text-align: center;
-  padding-bottom: 10px;
+  padding: 10px 0;
   font-weight: 700;
   font-size: 18px;
-}
-
-#text-center {
-  text-align: center;
-  padding: 0.8rem;
 }
 
 #text-point {
   font-weight: bolder;
   text-align: center;
-  padding: 0.8rem;
+  padding: 0.5rem 0.8rem;
 }
 
 #text-value-center {
   text-align: center;
-  padding: 0.8rem;
+  padding: 0.5rem 0.8rem;
   width: 400px;
 }
 

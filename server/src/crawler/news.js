@@ -45,7 +45,15 @@ export default class newsCrawler {
             .find("a")
             .each(function (i, e) {
               var href = urlShort + $(this).attr("href");
-              var title = $(this).find("div > div").text().trim();
+              var title = $(this).find("div > h3").text().trim();
+
+              if (title === "") {
+                title = $(this).find("div > h5").text().trim();
+              }
+
+              if (title === "") {
+                title = $(this).find("div > h6").text().trim();
+              }
 
               request(href, function (err, res, body) {
                 if (err) console.log("Error: " + err);

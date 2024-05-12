@@ -24,7 +24,7 @@ export function Results({ favoritesChamp, favoritesTeams }) {
   const getFilterSelect = (x) => {
     var date = getTodayDate(x);
     date = date.replace("-", "/");
-    date = date.replace("-2023", "");
+    date = date.replace("-2024", "");
     return date;
   };
 
@@ -249,7 +249,7 @@ export function Results({ favoritesChamp, favoritesTeams }) {
       ) : haveChampionships(matchsData) ? (
         matchsData?.map((championship, i) =>
           haveMatchs(championship) ? (
-            <div key={i}>
+            <div key={i} style={{ margin: "2px" }}>
               <div className="championship-results">
                 <Col
                   md={1}

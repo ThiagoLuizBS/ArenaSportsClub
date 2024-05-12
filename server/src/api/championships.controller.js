@@ -1,4 +1,5 @@
 import championshipsCrawler from "../crawler/championships.js";
+import championshipsExtraDataCrawler from "../crawler/championshipsExtraData.js";
 import championshipsDAO from "../dao/championshipsDAO.js";
 
 export default class championshipsController {
@@ -38,6 +39,38 @@ export default class championshipsController {
         }
       }
       return { status: "success championship" };
+    } catch (error) {
+      return { errorapiPostChampionships: error.message };
+    }
+  }
+
+  static async apiPostChampionshipsExtraData() {
+    try {
+      const championships =
+        await championshipsExtraDataCrawler.getChampionships();
+      let championshipFound;
+
+      for (let index = 0; index < championships.length; index++) {
+        if (championships[index].url !== undefined) {
+          championshipFound =
+            await championshipsDAO.getChampionshipExtraDataByUrl(
+              championships[index].url
+            );
+
+          if (championshipFound !== 0) {
+            const ChampionshipResponse =
+              await championshipsDAO.updateChampionshipExtraData(
+                championships[index]
+              );
+
+            var { error } = ChampionshipResponse;
+            if (error) {
+              return { error };
+            }
+          }
+        }
+      }
+      return { status: "success championship extra data" };
     } catch (error) {
       return { errorapiPostChampionships: error.message };
     }
