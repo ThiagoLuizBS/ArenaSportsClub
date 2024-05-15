@@ -157,6 +157,39 @@ export default class championshipsExtraDataCrawler {
                         return item;
                       });
                     }
+                  } else if (name === "Squad Goalkeeping") {
+                    var cs = $(this).find("td:nth-child(15)").text().trim();
+
+                    if (team != "" && team) {
+                      tr = tr.map((item) => {
+                        if (item.team === team) {
+                          item.cs = cs;
+                        }
+                        return item;
+                      });
+                    }
+                  } else if (name === "Squad Miscellaneous Stats") {
+                    var fls = $(this).find("td:nth-child(7)").text().trim();
+
+                    if (team != "" && team) {
+                      tr = tr.map((item) => {
+                        if (item.team === team) {
+                          item.fls = fls;
+                        }
+                        return item;
+                      });
+                    }
+                  } else if (name === "Squad Miscellaneous Stats") {
+                    var ck = $(this).find("td:nth-child(12)").text().trim();
+
+                    if (team != "" && team) {
+                      tr = tr.map((item) => {
+                        if (item.team === team) {
+                          item.ck = ck;
+                        }
+                        return item;
+                      });
+                    }
                   }
                 });
             }

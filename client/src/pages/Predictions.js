@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form } from "react-bootstrap";
-import { Container, Button } from "react-bootstrap";
+import { Container, Button, Col } from "react-bootstrap";
 import MatchDataService from "../services/match.js";
 import "../styles/pages/Predictions.css";
 
@@ -29,28 +29,6 @@ export function Predictions() {
   const [model, setModel] = useState("inline-radio1-0");
   const [matchSelected, setMatchSelected] = useState("");
   const [matchsCounter, setMatchsCounter] = useState("inline-radio2-5");
-  const [statisticsSelected, setStatisticsSelected] = useState([
-    "Posse de bola",
-    "Total de passes",
-    "Passes corretos",
-    "Total de chutes",
-    "Chutes no gol",
-    "Escanteios",
-    "Faltas cometidas",
-  ]);
-  const [statisticsChampionshipSelected, setStatisticsChampionshipSelected] =
-    useState([
-      "Posição e pontuação",
-      "Número de P/V/E/D",
-      "Estatísticas de gols",
-      "Estatísticas de chutes",
-      "Estatísticas de passes",
-      "Estatísticas do elenco",
-      "Salários do elenco",
-    ]);
-  const [error, setError] = useState("");
-
-  const modelsList = ["gpt-3.5", "gpt-4"];
   const statisticsList = [
     "Posse de bola",
     "Total de passes",
@@ -61,14 +39,29 @@ export function Predictions() {
     "Faltas cometidas",
   ];
   const statisticsChampionshipList = [
-    "Posição e pontuação",
-    "Número de P/V/E/D",
-    "Estatísticas de gols",
-    "Estatísticas de chutes",
-    "Estatísticas de passes",
-    "Estatísticas do elenco",
-    "Salários do elenco",
+    "Posição",
+    "Pts/J/V/E/D",
+    "GM/GS/SG",
+    "xG/xGA/xGD",
+    "Sh/SoT/SoT%",
+    "GSh/GSoT",
+    "Poss/Cmp/Cmpp",
+    "PrgC/PrgP",
+    "Faltas cometidas",
+    "Cartões amarelos e vermelhos",
+    "Clean Sheets",
+    "Escanteios cobrados",
+    "Idade média do elenco",
+    "Salário do elenco",
+    "Público médio",
   ];
+
+  const [statisticsSelected, setStatisticsSelected] = useState(statisticsList);
+  const [statisticsChampionshipSelected, setStatisticsChampionshipSelected] =
+    useState(statisticsChampionshipList);
+  const [error, setError] = useState("");
+
+  const modelsList = ["gpt-3.5", "gpt-4", "gpt-4o"];
 
   const changeStatisticsSelected = (event) => {
     if (event.target.checked)
@@ -85,7 +78,7 @@ export function Predictions() {
     if (event.target.checked)
       setStatisticsChampionshipSelected((prev) => [...prev, event.target.id]);
     else {
-      const newStatisticsSelected = statisticsSelected.filter(
+      const newStatisticsSelected = statisticsChampionshipSelected.filter(
         (value) => value !== event.target.id
       );
       setStatisticsChampionshipSelected(newStatisticsSelected);
@@ -137,11 +130,11 @@ export function Predictions() {
   return (
     <Container>
       <div className="predictions-container">
-        <h1>Predição de partidas</h1>
+        <h1>Previsão de partidas</h1>
 
         <h5>
           Selecione a partida e as informações que serão utilizadas para gerar a
-          previsão
+          previção
         </h5>
 
         <Form onSubmit={handleSubmit} className="my-4">
@@ -171,89 +164,109 @@ export function Predictions() {
             </Form.Select>
           </Form.Group>
 
-          <Form.Group className="mb-3" controlId="formBasicRadio1">
-            <Form.Label className="me-4">Modelo</Form.Label>
+          <div className="row-statistics-predictions">
+            <Col md={2} sm={10} xs={10}>
+              <Form.Group className="mb-3" controlId="formBasicRadio1">
+                <Form.Label className="me-4 bold">Modelo</Form.Label>
 
-            {modelsList.map((item, i) => (
-              <Form.Check
-                key={i}
-                inline
-                label={item}
-                name="radio1"
-                type="radio"
-                checked={model === `inline-radio1-${i}`}
-                onChange={(event) => setModel(event.target.id)}
-                id={`inline-radio1-${i}`}
-              />
-            ))}
-          </Form.Group>
+                <div className="rows-radio-1">
+                  {modelsList.map((item, i) => (
+                    <Form.Check
+                      key={i}
+                      inline
+                      label={item}
+                      name="radio1"
+                      type="radio"
+                      checked={model === `inline-radio1-${i}`}
+                      onChange={(event) => setModel(event.target.id)}
+                      id={`inline-radio1-${i}`}
+                    />
+                  ))}
+                </div>
+              </Form.Group>
+            </Col>
 
-          <Form.Group className="mb-3" controlId="formBasicRadio2">
-            <Form.Label className="me-4">
-              Número de partidas no histórico
-            </Form.Label>
+            <Col md={3} sm={10} xs={10}>
+              <Form.Group className="mb-3" controlId="formBasicRadio2">
+                <Form.Label className="me-4 bold">
+                  Número de partidas no histórico
+                </Form.Label>
 
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, i) => (
-              <Form.Check
-                key={i}
-                inline
-                label={item}
-                name="radio2"
-                type="radio"
-                checked={matchsCounter === `inline-radio2-${i}`}
-                onChange={(event) => setMatchsCounter(event.target.id)}
-                id={`inline-radio2-${i}`}
-              />
-            ))}
-          </Form.Group>
+                <div className="rows-radio-1">
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, i) => (
+                    <Form.Check
+                      key={i}
+                      inline
+                      label={item}
+                      name="radio2"
+                      type="radio"
+                      checked={matchsCounter === `inline-radio2-${i}`}
+                      onChange={(event) => setMatchsCounter(event.target.id)}
+                      id={`inline-radio2-${i}`}
+                    />
+                  ))}
+                </div>
+              </Form.Group>
+            </Col>
 
-          <Form.Group className="mb-3" controlId="formBasicCheckbox1">
-            <Form.Label className="me-4">
-              Estatísticas das partidas selecionadas
-            </Form.Label>
+            <Col md={3} sm={10} xs={10}>
+              <Form.Group className="mb-3" controlId="formBasicCheckbox1">
+                <Form.Label className="me-4 bold">
+                  Estatísticas das partidas
+                </Form.Label>
 
-            {statisticsList.map((item, i) => (
-              <Form.Check
-                key={i}
-                inline
-                label={item}
-                name={item}
-                type="checkbox"
-                checked={statisticsSelected.some((value) => value === item)}
-                onChange={(event) => changeStatisticsSelected(event)}
-                id={item}
-              />
-            ))}
-          </Form.Group>
+                <div className="rows-radio-1">
+                  {statisticsList.map((item, i) => (
+                    <Form.Check
+                      key={i}
+                      inline
+                      label={item}
+                      name={item}
+                      type="checkbox"
+                      checked={statisticsSelected.some(
+                        (value) => value === item
+                      )}
+                      onChange={(event) => changeStatisticsSelected(event)}
+                      id={item}
+                    />
+                  ))}
+                </div>
+              </Form.Group>
+            </Col>
 
-          <Form.Group className="mb-3" controlId="formBasicCheckbox2">
-            <Form.Label className="me-4">
-              Estatísticas do campeonato selecionadas
-            </Form.Label>
+            <Col md={3} sm={10} xs={10}>
+              <Form.Group className="mb-3" controlId="formBasicCheckbox2">
+                <Form.Label className="me-4 bold">
+                  Estatísticas do campeonato
+                </Form.Label>
 
-            {statisticsChampionshipList.map((item, i) => (
-              <Form.Check
-                key={i}
-                inline
-                label={item}
-                name={item}
-                type="checkbox"
-                checked={statisticsChampionshipSelected.some(
-                  (value) => value === item
-                )}
-                onChange={(event) =>
-                  changeStatisticsChampionshipSelected(event)
-                }
-                id={item}
-              />
-            ))}
-          </Form.Group>
+                <div className="rows-radio-1">
+                  {statisticsChampionshipList.map((item, i) => (
+                    <Form.Check
+                      key={i}
+                      inline
+                      label={item}
+                      name={item}
+                      type="checkbox"
+                      checked={statisticsChampionshipSelected.some(
+                        (value) => value === item
+                      )}
+                      onChange={(event) =>
+                        changeStatisticsChampionshipSelected(event)
+                      }
+                      id={item}
+                    />
+                  ))}
+                </div>
+              </Form.Group>
+            </Col>
+          </div>
 
           <Form.Label className="error-login">{error}</Form.Label>
 
           <div className="button-predict">
             <Button variant="success" type="submit">
-              Gerar predição
+              Gerar previsão
             </Button>
           </div>
         </Form>

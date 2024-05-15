@@ -127,77 +127,6 @@ function ButtonExtraTable({ actived, championship }) {
                         <span>xGD</span>
                       </OverlayTrigger>
                     </th>
-                    <th id="text-center">Público médio</th>
-                    <th id="text-center">
-                      <OverlayTrigger
-                        placement="top"
-                        overlay={(props) =>
-                          renderTooltip(props, `Número de jogadores no elenco`)
-                        }
-                      >
-                        <span>#Pl</span>
-                      </OverlayTrigger>
-                    </th>
-                    <th id="text-center">
-                      <OverlayTrigger
-                        placement="top"
-                        overlay={(props) =>
-                          renderTooltip(props, `Idade média do elenco`)
-                        }
-                      >
-                        <span>Age</span>
-                      </OverlayTrigger>
-                    </th>
-                    <th id="text-center">
-                      <OverlayTrigger
-                        placement="top"
-                        overlay={(props) =>
-                          renderTooltip(props, `Média de posse de bola`)
-                        }
-                      >
-                        <span>Poss</span>
-                      </OverlayTrigger>
-                    </th>
-                    <th id="text-center">
-                      <OverlayTrigger
-                        placement="top"
-                        overlay={(props) =>
-                          renderTooltip(props, `Corridas progressivas`)
-                        }
-                      >
-                        <span>PrgC</span>
-                      </OverlayTrigger>
-                    </th>
-                    <th id="text-center">
-                      <OverlayTrigger
-                        placement="top"
-                        overlay={(props) =>
-                          renderTooltip(props, `Passes progressivos`)
-                        }
-                      >
-                        <span>PrgP</span>
-                      </OverlayTrigger>
-                    </th>
-                    <th id="text-center">
-                      <OverlayTrigger
-                        placement="top"
-                        overlay={(props) =>
-                          renderTooltip(props, `Cartões amarelos`)
-                        }
-                      >
-                        <span>YC</span>
-                      </OverlayTrigger>
-                    </th>
-                    <th id="text-center">
-                      <OverlayTrigger
-                        placement="top"
-                        overlay={(props) =>
-                          renderTooltip(props, `Cartões vermelhos`)
-                        }
-                      >
-                        <span>RD</span>
-                      </OverlayTrigger>
-                    </th>
                     <th id="text-center">
                       <OverlayTrigger
                         placement="top"
@@ -246,6 +175,17 @@ function ButtonExtraTable({ actived, championship }) {
                         <span>G/SoT</span>
                       </OverlayTrigger>
                     </th>
+
+                    <th id="text-center">
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={(props) =>
+                          renderTooltip(props, `Média de posse de bola`)
+                        }
+                      >
+                        <span>Poss</span>
+                      </OverlayTrigger>
+                    </th>
                     <th id="text-center">
                       <OverlayTrigger
                         placement="top"
@@ -273,10 +213,100 @@ function ButtonExtraTable({ actived, championship }) {
                       <OverlayTrigger
                         placement="top"
                         overlay={(props) =>
+                          renderTooltip(props, `Corridas progressivas`)
+                        }
+                      >
+                        <span>PrgC</span>
+                      </OverlayTrigger>
+                    </th>
+                    <th id="text-center">
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={(props) =>
+                          renderTooltip(props, `Passes progressivos`)
+                        }
+                      >
+                        <span>PrgP</span>
+                      </OverlayTrigger>
+                    </th>
+                    <th id="text-center">
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={(props) =>
+                          renderTooltip(props, `Cartões amarelos`)
+                        }
+                      >
+                        <span>YC</span>
+                      </OverlayTrigger>
+                    </th>
+                    <th id="text-center">
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={(props) =>
+                          renderTooltip(props, `Cartões vermelhos`)
+                        }
+                      >
+                        <span>RC</span>
+                      </OverlayTrigger>
+                    </th>
+                    <th id="text-center">
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={(props) =>
                           renderTooltip(props, `Média de pontos por partida`)
                         }
                       >
                         <span>Pts/MP</span>
+                      </OverlayTrigger>
+                    </th>
+                    <th id="text-center">
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={(props) =>
+                          renderTooltip(props, `Clean Sheets`)
+                        }
+                      >
+                        <span>CS</span>
+                      </OverlayTrigger>
+                    </th>
+                    <th id="text-center">
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={(props) =>
+                          renderTooltip(props, `Faltas cometidas`)
+                        }
+                      >
+                        <span>Fls</span>
+                      </OverlayTrigger>
+                    </th>
+                    <th id="text-center">
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={(props) =>
+                          renderTooltip(props, `Escanteios cobrados`)
+                        }
+                      >
+                        <span>CK</span>
+                      </OverlayTrigger>
+                    </th>
+                    <th id="text-center">
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={(props) =>
+                          renderTooltip(props, `Número de jogadores no elenco`)
+                        }
+                      >
+                        <span>#Pl</span>
+                      </OverlayTrigger>
+                    </th>
+                    <th id="text-center">
+                      <OverlayTrigger
+                        placement="top"
+                        overlay={(props) =>
+                          renderTooltip(props, `Idade média do elenco`)
+                        }
+                      >
+                        <span>Age</span>
                       </OverlayTrigger>
                     </th>
                     <th id="text-center">
@@ -289,6 +319,7 @@ function ButtonExtraTable({ actived, championship }) {
                         <span>WW</span>
                       </OverlayTrigger>
                     </th>
+                    <th id="text-center">Público médio</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -310,25 +341,28 @@ function ButtonExtraTable({ actived, championship }) {
                       <td id="text-center">{scores.xg}</td>
                       <td id="text-center">{scores.xga}</td>
                       <td id="text-center">{scores.xgd}</td>
-                      <td id="text-center">
-                        {scores.attendance.replace(",", ".")}
-                      </td>
-                      <td id="text-center">{scores.npl}</td>
-                      <td id="text-center">{scores.age}</td>
-                      <td id="text-center">{scores.poss}%</td>
-                      <td id="text-center">{scores.prgc}</td>
-                      <td id="text-center">{scores.prgp}</td>
-                      <td id="text-center">{scores.crdy}</td>
-                      <td id="text-center">{scores.crdr}</td>
                       <td id="text-center">{scores.sh}</td>
                       <td id="text-center">{scores.sot}</td>
                       <td id="text-center">{scores.sotp}%</td>
                       <td id="text-center">{scores.gsh}</td>
                       <td id="text-center">{scores.gsot}</td>
+                      <td id="text-center">{scores.poss}%</td>
                       <td id="text-center">{scores.cmp}</td>
                       <td id="text-center">{scores.cmpp}%</td>
+                      <td id="text-center">{scores.prgc}</td>
+                      <td id="text-center">{scores.prgp}</td>
+                      <td id="text-center">{scores.crdy}</td>
+                      <td id="text-center">{scores.crdr}</td>
                       <td id="text-center">{scores.ptsmp}</td>
+                      <td id="text-center">{scores.cs}</td>
+                      <td id="text-center">{scores.fls}</td>
+                      <td id="text-center">{scores.ck}</td>
+                      <td id="text-center">{scores.npl}</td>
+                      <td id="text-center">{scores.age}</td>
                       <td id="text-center">{scores.ww}</td>
+                      <td id="text-center">
+                        {scores.attendance.replace(",", ".")}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
