@@ -172,4 +172,15 @@ export default class teamsDAO {
       throw e;
     }
   }
+
+  // static async getDeletetest() {
+  //   try {
+  //     return await teams.deleteMany({
+  //       name: /Últimos jogos/i,
+  //     });
+  //   } catch (e) {
+  //     console.error(`Unable to delete news: ${e}`);
+  //     return { error: e };
+  //   }
+  // }
 }

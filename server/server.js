@@ -11,6 +11,8 @@ import championshipsController from "./src/api/championships.controller.js";
 import teamsController from "./src/api/teams.controller.js";
 import championshipsExtraDataCrawler from "./src/crawler/championshipsExtraData.js";
 import nextMatchsCrawler from "./src/crawler/nextMatchs.js";
+import matchsDAO from "./src/dao/matchsDAO.js";
+import teamsDAO from "./src/dao/teamsDAO.js";
 
 const app = express();
 
@@ -105,6 +107,11 @@ async function scrapNews() {
   }, 60000);
 }
 
+async function updateTeams() {
+  const result = await matchsController.updateAllTeams();
+  console.log(result);
+}
+
 app.use(cors());
 app.use(express.json());
 app.use((req, res, next) => {
@@ -148,6 +155,10 @@ setTimeout(() => {
   scrapNextMatchs();
   setInterval(scrapNextMatchs, process.env.CRAWLERINTERVALDAY);
 }, 9000000);
+
+// setTimeout(() => {
+//   updateTeams();
+// }, 3000);
 
 /* --------------------- Atualizar partidas de ontem para CANCELADO caso não tenha resultado final --------------------------- */
 // setTimeout(async () => {

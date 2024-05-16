@@ -703,10 +703,10 @@ export default class matchsDAO {
     }
   }
 
-  // static async getDelete() {
+  // static async getDeletetest() {
   //   try {
   //     return await matchs.deleteMany({
-  //       idMatch: "2190",
+  //       name: /Últimos jogos/i,
   //     });
   //   } catch (e) {
   //     console.error(`Unable to delete news: ${e}`);
@@ -714,13 +714,14 @@ export default class matchsDAO {
   //   }
   // }
 
-  // static async updateTeamsId(name, id) {
+  // static async updateTeamsId(match, idHome, idAway) {
   //   try {
   //     const updateResponse = await matchs.updateMany(
-  //       { "teams.homeName": name },
+  //       { idMatch: match },
   //       {
   //         $set: {
-  //           "teams.homeId": id,
+  //           "teams.homeId": idHome,
+  //           "teams.awayId": idAway,
   //         },
   //       }
   //     );
@@ -731,15 +732,22 @@ export default class matchsDAO {
   //   }
   // }
 
-  // static async updateTeamsId2(name, id) {
+  // static async updateTeams() {
   //   try {
   //     const updateResponse = await matchs.updateMany(
-  //       { "teams.awayName": name },
-  //       {
-  //         $set: {
-  //           "teams.awayId": id,
+  //       {}, // Filtro para selecionar todos os documentos
+  //       [
+  //         {
+  //           $set: {
+  //             "teams.teamHomeHref": {
+  //               $arrayElemAt: [{ $split: ["$teams.teamHomeHref", ".html"] }, 0],
+  //             },
+  //             "teams.teamAwayHref": {
+  //               $arrayElemAt: [{ $split: ["$teams.teamAwayHref", ".html"] }, 0],
+  //             },
+  //           },
   //         },
-  //       }
+  //       ]
   //     );
   //     return updateResponse;
   //   } catch (e) {

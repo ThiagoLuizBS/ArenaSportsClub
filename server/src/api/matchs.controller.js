@@ -79,6 +79,41 @@ export default class matchsController {
     }
   }
 
+  static async updateAllTeams() {
+    try {
+      let matchs = await matchsDAO.getMatchs();
+      let teamHomeId = "";
+      let teamAwayId = "";
+
+      for (let match of matchs) {
+        teamHomeId = await teamsDAO.getTeamByTeamUrl(match.teams.teamHomeHref);
+        teamHomeId = teamHomeId[0]?.idTeam;
+        if (teamHomeId === undefined) teamHomeId = "";
+        teamAwayId = await teamsDAO.getTeamByTeamUrl(match.teams.teamAwayHref);
+        teamAwayId = teamAwayId[0]?.idTeam;
+        if (teamAwayId === undefined) teamAwayId = "";
+
+        const response = await matchsDAO.updateTeamsId(
+          match.idMatch,
+          teamHomeId,
+          teamAwayId
+        );
+
+        console.log(match.idMatch);
+
+        var { error } = response;
+        if (error) {
+          return { error };
+        }
+      }
+
+      return { status: "success update" };
+    } catch (e) {
+      console.log(`api, ${e}`);
+      res.status(500).json({ error: e });
+    }
+  }
+
   static async apiPostNextMatch() {
     try {
       const matchs = await nextMatchsCrawler.getMatchs();
@@ -90,6 +125,7 @@ export default class matchsController {
 
       for (let index = 0; index < matchs.length; index++) {
         matchTitle = await matchsDAO.getMatchByTitle(matchs[index].idTitle);
+
         if (matchTitle === 0) {
           maxId = await matchsDAO.getMatchMaxID();
           championshipId =

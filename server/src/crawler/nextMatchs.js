@@ -46,6 +46,11 @@ export default class nextMatchsCrawler {
       lineupAwayB.splice(0, Infinity);
 
       nextMatchs.forEach((urlMatch) => {
+        // const urlBase =
+        //   "https://www.placardefutebol.com.br/campeonato-ingles/" +
+        //   urlMatch +
+        //   ".html";
+
         request(urlMatch, function (err, res, body) {
           if (err) console.log("Error: " + err);
           var $ = load(body);
@@ -65,8 +70,18 @@ export default class nextMatchsCrawler {
               )
               .text()
               .trim();
-            var scoreHome = "";
-            var scoreAway = "";
+            var scoreHome = $(this)
+              .find(
+                "#livescore > div:nth-child(1) > div:nth-child(1) > div > div.row.match-card-first-row.justify-content-md-center > div.col-lg-2.col-4.text-center.match-scoreboard > span:nth-child(3)"
+              )
+              .text()
+              .trim();
+            var scoreAway = $(this)
+              .find(
+                "#livescore > div:nth-child(1) > div:nth-child(1) > div > div.row.match-card-first-row.justify-content-md-center > div.col-lg-2.col-4.text-center.match-scoreboard > span:nth-child(5)"
+              )
+              .text()
+              .trim();
             var time = $(this)
               .find(
                 "#livescore > div > div.row.align-items-center.content > div > div.row.match-card-first-row.justify-content-md-center > div.col-lg-2.col-4.text-center.match-scoreboard > span.badge.badge-success.status-name"
@@ -74,18 +89,19 @@ export default class nextMatchsCrawler {
               .text()
               .trim();
 
-            var status = time;
-            if (
-              time !== "ENCERRADO" &&
-              time !== "SUSPENSO" &&
-              time !== "ONTEM" &&
-              !time.includes("AMANHÃ") &&
-              !time.includes("HOJE")
-            ) {
-              status = "AO VIVO";
-            } else if (time.includes("AMANHÃ") || time.includes("HOJE")) {
-              status = "A REALIZAR";
-            }
+            var status = "ENCERRADO";
+
+            // if (
+            //   time !== "ENCERRADO" &&
+            //   time !== "SUSPENSO" &&
+            //   time !== "ONTEM" &&
+            //   !time.includes("AMANHÃ") &&
+            //   !time.includes("HOJE")
+            // ) {
+            //   status = "AO VIVO";
+            // } else if (time.includes("AMANHÃ") || time.includes("HOJE")) {
+            //   status = "A REALIZAR";
+            // }
 
             var championshipUrl = $(this)
               .find(
@@ -125,6 +141,13 @@ export default class nextMatchsCrawler {
                 "#livescore > div:nth-child(1) > div:nth-child(1) > div > div.row.match-card-second-row.justify-content-md-center > div:nth-child(3) > a"
               )
               .attr("href");
+
+            teamHomeHref = teamHomeHref
+              ? teamHomeHref.split(".html")[0]
+              : teamHomeHref;
+            teamAwayHref = teamAwayHref
+              ? teamAwayHref.split(".html")[0]
+              : teamAwayHref;
 
             var dateTime = $(this)
               .find(

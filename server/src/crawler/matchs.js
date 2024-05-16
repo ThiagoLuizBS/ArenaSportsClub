@@ -152,6 +152,13 @@ export default class matchsCrawler {
                       )
                       .attr("href");
 
+                    teamHomeHref = teamHomeHref
+                      ? teamHomeHref.split(".html")[0]
+                      : teamHomeHref;
+                    teamAwayHref = teamAwayHref
+                      ? teamAwayHref.split(".html")[0]
+                      : teamAwayHref;
+
                     var dateTime = $(this)
                       .find(
                         "#livescore > div:nth-child(1) > div.match-details > p:nth-child(1)"

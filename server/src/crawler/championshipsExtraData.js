@@ -158,6 +158,7 @@ export default class championshipsExtraDataCrawler {
                       });
                     }
                   } else if (name === "Squad Goalkeeping") {
+                    var team = $(this).find("th > a").text().trim();
                     var cs = $(this).find("td:nth-child(15)").text().trim();
 
                     if (team != "" && team) {
@@ -169,6 +170,7 @@ export default class championshipsExtraDataCrawler {
                       });
                     }
                   } else if (name === "Squad Miscellaneous Stats") {
+                    var team = $(this).find("th > a").text().trim();
                     var fls = $(this).find("td:nth-child(7)").text().trim();
 
                     if (team != "" && team) {
@@ -179,7 +181,8 @@ export default class championshipsExtraDataCrawler {
                         return item;
                       });
                     }
-                  } else if (name === "Squad Miscellaneous Stats") {
+                  } else if (name === "Squad Pass Types") {
+                    var team = $(this).find("th > a").text().trim();
                     var ck = $(this).find("td:nth-child(12)").text().trim();
 
                     if (team != "" && team) {
