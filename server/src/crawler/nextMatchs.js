@@ -89,19 +89,19 @@ export default class nextMatchsCrawler {
               .text()
               .trim();
 
-            var status = "ENCERRADO";
+            var status = time;
 
-            // if (
-            //   time !== "ENCERRADO" &&
-            //   time !== "SUSPENSO" &&
-            //   time !== "ONTEM" &&
-            //   !time.includes("AMANHÃ") &&
-            //   !time.includes("HOJE")
-            // ) {
-            //   status = "AO VIVO";
-            // } else if (time.includes("AMANHÃ") || time.includes("HOJE")) {
-            //   status = "A REALIZAR";
-            // }
+            if (
+              time !== "ENCERRADO" &&
+              time !== "SUSPENSO" &&
+              time !== "ONTEM" &&
+              !time.includes("AMANHÃ") &&
+              !time.includes("HOJE")
+            ) {
+              status = "AO VIVO";
+            } else if (time.includes("AMANHÃ") || time.includes("HOJE")) {
+              status = "A REALIZAR";
+            }
 
             var championshipUrl = $(this)
               .find(
