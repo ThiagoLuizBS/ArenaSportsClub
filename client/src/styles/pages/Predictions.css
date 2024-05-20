@@ -35,3 +35,24 @@
 .bold {
   font-weight: bold;
 }
+
+.prevision-results {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.prevision-results div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+}
+
+.prevision-results span {
+  width: 200px;
+  text-align: center;
+}

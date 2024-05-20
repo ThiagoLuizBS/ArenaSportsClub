@@ -3,6 +3,7 @@ import { Form } from "react-bootstrap";
 import { Container, Button, Col } from "react-bootstrap";
 import MatchDataService from "../services/match.js";
 import "../styles/pages/Predictions.css";
+import previsionService from "../services/prevision.js";
 
 export function Predictions() {
   const getTodayDate = (x) => {
@@ -26,9 +27,11 @@ export function Predictions() {
   const [matchsData, setMatchsData] = useState([]);
   const [dateFilter, setDateFilter] = useState(getTodayDate(0));
   const [loading, setLoading] = useState(false);
-  const [model, setModel] = useState("inline-radio1-0");
+  const [model, setModel] = useState("gpt-3.5-turbo");
+  const [language, setLanguage] = useState("Português");
+  const [shotsLearning, setShotsLearning] = useState("One-shot");
   const [matchSelected, setMatchSelected] = useState("");
-  const [matchsCounter, setMatchsCounter] = useState("inline-radio2-5");
+  const [matchsCounter, setMatchsCounter] = useState(6);
   const statisticsList = [
     "Posse de bola",
     "Total de passes",
@@ -56,12 +59,16 @@ export function Predictions() {
     "Público médio",
   ];
 
-  const [statisticsSelected, setStatisticsSelected] = useState(statisticsList);
+  const [statisticsSelected, setStatisticsSelected] = useState([]);
   const [statisticsChampionshipSelected, setStatisticsChampionshipSelected] =
-    useState(statisticsChampionshipList);
+    useState([]);
   const [error, setError] = useState("");
+  const [response, setResponse] = useState("");
+  console.log(response);
 
-  const modelsList = ["gpt-3.5", "gpt-4", "gpt-4o"];
+  const modelsList = ["gpt-3.5-turbo", "gpt-4", "gpt-4o"];
+  const languagesList = ["Português", "Inglês"];
+  const shotsLearningsList = ["Zero-shot", "One-shot", "Three-shots"];
 
   const changeStatisticsSelected = (event) => {
     if (event.target.checked)
@@ -95,16 +102,30 @@ export function Predictions() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log(
+      model,
+      language,
+      shotsLearning,
+      matchsCounter,
+      statisticsSelected,
+      statisticsChampionshipSelected
+    );
     if (model === "") setError("Preencha todos os campos!");
     else {
-      //   UserDataService.getUser(email, password)
-      //     .then((response) => {
-      //       setError("");
-      //       handleLogin(response.data.token, response.data.idUser);
-      //       setShowToast(true);
-      //       setToastMessage(`Seja bem vindo ${response.data.nameUser}!`);
-      //     })
-      //     .catch((response) => setError(response.response.data.error));
+      previsionService
+        .getPrevision({
+          model,
+          language,
+          shotsLearning,
+          matchsCounter,
+          statisticsSelected,
+          statisticsChampionshipSelected,
+        })
+        .then((response) => {
+          setError("");
+          setResponse(response.data.data);
+        })
+        .catch((response) => setError(response.response.data.error));
     }
   };
 
@@ -177,9 +198,51 @@ export function Predictions() {
                       label={item}
                       name="radio1"
                       type="radio"
-                      checked={model === `inline-radio1-${i}`}
+                      checked={model === item}
                       onChange={(event) => setModel(event.target.id)}
-                      id={`inline-radio1-${i}`}
+                      id={item}
+                    />
+                  ))}
+                </div>
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="formBasicRadio3">
+                <Form.Label className="me-4 bold">
+                  Linguagem utilizada
+                </Form.Label>
+
+                <div className="rows-radio-1">
+                  {languagesList.map((item, i) => (
+                    <Form.Check
+                      key={i}
+                      inline
+                      label={item}
+                      name="radio3"
+                      type="radio"
+                      checked={language === item}
+                      onChange={(event) => setLanguage(event.target.id)}
+                      id={item}
+                    />
+                  ))}
+                </div>
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="formBasicRadio4">
+                <Form.Label className="me-4 bold">
+                  Número de exemplos para o modelo
+                </Form.Label>
+
+                <div className="rows-radio-1">
+                  {shotsLearningsList.map((item, i) => (
+                    <Form.Check
+                      key={i}
+                      inline
+                      label={item}
+                      name="radio4"
+                      type="radio"
+                      checked={shotsLearning === item}
+                      onChange={(event) => setShotsLearning(event.target.id)}
+                      id={item}
                     />
                   ))}
                 </div>
@@ -200,9 +263,9 @@ export function Predictions() {
                       label={item}
                       name="radio2"
                       type="radio"
-                      checked={matchsCounter === `inline-radio2-${i}`}
-                      onChange={(event) => setMatchsCounter(event.target.id)}
-                      id={`inline-radio2-${i}`}
+                      checked={matchsCounter === item}
+                      onChange={(event) => setMatchsCounter(+event.target.id)}
+                      id={item}
                     />
                   ))}
                 </div>
@@ -212,7 +275,7 @@ export function Predictions() {
             <Col md={3} sm={10} xs={10}>
               <Form.Group className="mb-3" controlId="formBasicCheckbox1">
                 <Form.Label className="me-4 bold">
-                  Estatísticas das partidas
+                  Estatísticas das partidas (Max 5)
                 </Form.Label>
 
                 <div className="rows-radio-1">
@@ -220,6 +283,10 @@ export function Predictions() {
                     <Form.Check
                       key={i}
                       inline
+                      disabled={
+                        statisticsSelected.length > 4 &&
+                        !statisticsSelected.some((value) => value === item)
+                      }
                       label={item}
                       name={item}
                       type="checkbox"
@@ -237,7 +304,7 @@ export function Predictions() {
             <Col md={3} sm={10} xs={10}>
               <Form.Group className="mb-3" controlId="formBasicCheckbox2">
                 <Form.Label className="me-4 bold">
-                  Estatísticas do campeonato
+                  Estatísticas do campeonato (Max 5)
                 </Form.Label>
 
                 <div className="rows-radio-1">
@@ -247,6 +314,12 @@ export function Predictions() {
                       inline
                       label={item}
                       name={item}
+                      disabled={
+                        statisticsChampionshipSelected.length > 4 &&
+                        !statisticsChampionshipSelected.some(
+                          (value) => value === item
+                        )
+                      }
                       type="checkbox"
                       checked={statisticsChampionshipSelected.some(
                         (value) => value === item
@@ -270,6 +343,22 @@ export function Predictions() {
             </Button>
           </div>
         </Form>
+      </div>
+
+      <div className="prevision-results">
+        <h1>{response.split("\n")[0]}</h1>
+
+        <div>
+          <span>Vitória</span>
+          <span>Empate</span>
+          <span>Vitória</span>
+        </div>
+
+        <div>
+          <span>{response.split("\n")[1].split("|")[0].match(/\d+/)}%</span>
+          <span>{response.split("\n")[1].split("|")[1].match(/\d+/)}%</span>
+          <span>{response.split("\n")[1].split("|")[2].match(/\d+/)}%</span>
+        </div>
       </div>
     </Container>
   );
