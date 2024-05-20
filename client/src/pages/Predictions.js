@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form } from "react-bootstrap";
-import { Container, Button, Col } from "react-bootstrap";
+import { Container, Button, Col, Spinner } from "react-bootstrap";
 import MatchDataService from "../services/match.js";
 import "../styles/pages/Predictions.css";
 import previsionService from "../services/prevision.js";
@@ -64,7 +64,6 @@ export function Predictions() {
     useState([]);
   const [error, setError] = useState("");
   const [response, setResponse] = useState("");
-  console.log(response);
 
   const modelsList = ["gpt-3.5-turbo", "gpt-4", "gpt-4o"];
   const languagesList = ["Português", "Inglês"];
@@ -112,6 +111,7 @@ export function Predictions() {
     );
     if (model === "") setError("Preencha todos os campos!");
     else {
+      setResponse("");
       previsionService
         .getPrevision({
           model,
@@ -345,21 +345,35 @@ export function Predictions() {
         </Form>
       </div>
 
-      <div className="prevision-results">
-        <h1>{response.split("\n")[0]}</h1>
+      {response !== "" ? (
+        <div className="prevision-results" style={{ margin: "16px 0" }}>
+          <h1>{response.split("\n")[0]}</h1>
 
-        <div>
-          <span>Vitória</span>
-          <span>Empate</span>
-          <span>Vitória</span>
-        </div>
+          <div>
+            <span>Vitória</span>
+            <span>Empate</span>
+            <span>Vitória</span>
+          </div>
 
-        <div>
-          <span>{response.split("\n")[1].split("|")[0].match(/\d+/)}%</span>
-          <span>{response.split("\n")[1].split("|")[1].match(/\d+/)}%</span>
-          <span>{response.split("\n")[1].split("|")[2].match(/\d+/)}%</span>
+          <div>
+            <span>{response.split("\n")[1].split("|")[0].match(/\d+/)}%</span>
+            <span>{response.split("\n")[1].split("|")[1].match(/\d+/)}%</span>
+            <span>{response.split("\n")[1].split("|")[2].match(/\d+/)}%</span>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div
+          className="spinner-results"
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Spinner animation="border" />
+          <span style={{ margin: "0 16px" }}>Aguardando previsão</span>
+        </div>
+      )}
     </Container>
   );
 }
