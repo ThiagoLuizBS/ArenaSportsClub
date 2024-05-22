@@ -1,5 +1,7 @@
 import { Configuration, OpenAIApi } from "openai";
 import dotenv from "dotenv";
+import matchsDAO from "../dao/matchsDAO.js";
+import championshipsDAO from "../dao/championshipsDAO.js";
 
 dotenv.config();
 
@@ -15,7 +17,7 @@ export async function GPTPrevision(data) {
       messages: [
         {
           role: "system",
-          content: `Você é um especialista matemático e grande conhecedor de futebol. Irei te fornecer algumas informações sobre uma partida de futebol que vai ocorrer.  Essas informações seriam o nome de cada equipe, o local da partida e o mais importante o histórico de partidas de cada equipe. O histórico contém informações das últimas 6 partidas, cada partida terá informações como resultado,  sumário de acontecimentos, estatísticas, data e local da realização da partida.
+          content: `Você é um especialista matemático e grande conhecedor de futebol. Irei te fornecer algumas informações sobre uma partida de futebol que vai ocorrer.  Essas informações seriam o nome de cada equipe, o local da partida e o mais importante o histórico de partidas de cada equipe. O histórico contém informações das últimas ${data.matchsCounter} partidas, cada partida terá informações como resultado, estatísticas, data e local da realização da partida. Também terão estatísticas do campeonato em que a partida será realizada.
           
           Seu trabalho será analisar essas informações, principalmente os resultados anteriores de cada equipe e fazer uma previsão do resultado da partida que irá acontecer. A sua resposta deverá  seguir o modelo abaixo de tabela:
           
@@ -31,23 +33,15 @@ export async function GPTPrevision(data) {
           content: `Partida:
 
           """
-          Liverpool x Manchester City, campeonato Premier League - 2023/2024, local Anfield (Liverpool), data 06/05/2024 às 15:00.
+          ${data.matchPresentation}
 
-          Histórico de partidas do Liverpool:
-          Liverpool 2 - 1 Chelsea, campeonato Premier League - 2023/2024, local Anfield (Liverpool), data 29/04/2024 às 16:00. Posse de bola: 55% - 45%, Passes corretos: 450 - 380, Chutes a gol: 8 - 5, Escanteios: 6 - 3.
-          Everton 0 - 3 Liverpool, campeonato Premier League - 2023/2024, local Goodison Park (Liverpool), data 22/04/2024 às 14:30. Posse de bola: 60% - 40%, Passes corretos: 510 - 300, Chutes a gol: 10 - 2, Escanteios: 7 - 1.
-          Leicester City 1 - 2 Liverpool, campeonato Premier League - 2023/2024, local King Power Stadium (Leicester), data 15/04/2024 às 17:00. Posse de bola: 48% - 52%, Passes corretos: 400 - 480, Chutes a gol: 6 - 9, Escanteios: 4 - 8.
-          Liverpool 3 - 0 Arsenal, campeonato Premier League - 2023/2024, local Anfield (Liverpool), data 08/04/2024 às 15:00. Posse de bola: 58% - 42%, Passes corretos: 490 - 320, Chutes a gol: 12 - 3, Escanteios: 9 - 2.
-          Manchester United 1 - 1 Liverpool, campeonato Premier League - 2023/2024, local Old Trafford (Manchester), data 01/04/2024 às 16:30. Posse de bola: 50% - 50%, Passes corretos: 430 - 430, Chutes a gol: 7 - 7, Escanteios: 5 - 5.
-          Liverpool 4 - 0 Leicester City, campeonato Premier League - 2023/2024, local Anfield (Liverpool), data 26/03/2024 às 17:00. Posse de bola: 48% - 52%, Passes corretos: 400 - 480, Chutes a gol: 6 - 9, Escanteios: 4 - 8.
+          Histórico de partidas do ${data.match.teams.homeName}:
+          ${data.homeMatchsPresentation}
 
-          Histórico de partidas do Manchester City:
-          Manchester City 3 - 0 Southampton, campeonato Premier League - 2023/2024, local Etihad Stadium (Manchester), data 28/04/2024 às 15:00. Posse de bola: 62% - 38%, Passes corretos: 540 - 280, Chutes a gol: 15 - 3, Escanteios: 8 - 1.
-          Burnley 1 - 2 Manchester City, campeonato Premier League - 2023/2024, local Turf Moor (Burnley), data 20/04/2024 às 15:00. Posse de bola: 57% - 43%, Passes corretos: 500 - 320, Chutes a gol: 10 - 4, Escanteios: 6 - 2.
-          Manchester City 4 - 0 Wolverhampton Wanderers, campeonato Premier League - 2023/2024, local Etihad Stadium (Manchester), data 14/04/2024 às 15:00. Posse de bola: 65% - 35%, Passes corretos: 580 - 240, Chutes a gol: 18 - 2, Escanteios: 10 - 0.
-          Tottenham Hotspur 1 - 3 Manchester City, campeonato Premier League - 2023/2024, local Tottenham Hotspur Stadium (Londres), data 07/04/2024 às 15:00. Posse de bola: 60% - 40%, Passes corretos: 510 - 340, Chutes a gol: 13 - 5, Escanteios: 7 - 3.
-          Manchester City 2 - 2 Leeds United, campeonato Premier League - 2023/2024, local Etihad Stadium (Manchester), data 31/03/2024 às 15:00. Posse de bola: 58% - 42%, Passes corretos: 480 - 360, Chutes a gol: 11 - 6, Escanteios: 5 - 4.
-          Manchester City 6 - 1 Burnley, campeonato Premier League - 2023/2024, local Etihad Stadium (Manchester City), data 25/03/2024 às 15:00. Posse de bola: 57% - 43%, Passes corretos: 500 - 320, Chutes a gol: 10 - 4, Escanteios: 6 - 2.
+          Histórico de partidas do ${data.match.teams.awayName}:
+          ${data.awayMatchsPresentation}
+
+          ${data.championshipPresentation}
           """
           `,
         },
@@ -65,17 +59,133 @@ export async function GPTPrevision(data) {
   }
 }
 
+function getMatchPresentation(matchs, statistics) {
+  let matchResume = [];
+  let statisticsResume = [];
+
+  matchs.forEach((match) => {
+    statistics.forEach((element) => {
+      let index = match.statistics.findIndex((item) => item.type === element);
+
+      if (index !== -1)
+        statisticsResume.push(
+          `${element}: ${match.statistics[index].home}${
+            element.includes("%") ? "%" : ""
+          } - ${match.statistics[index].away}${
+            element.includes("%") ? "%" : ""
+          }`
+        );
+    });
+
+    matchResume.push(
+      `${match.teams.homeName} x ${match.teams.awayName}, campeonato ${
+        match.championship
+      }, local ${match.stadium}, data ${match.day}.${
+        statisticsResume.length > 0 ? ` ${statisticsResume.join(", ")}.` : ``
+      }`
+    );
+  });
+  return matchResume.join("\n");
+}
+
+function getChampionshipPresentation(
+  championship,
+  match,
+  statisticsChampionshipSelected
+) {
+  let statisticsHomeResume = [];
+  let statisticsAwayResume = [];
+
+  championship.table[0].table.forEach((team, idx) => {
+    if (team.team === match.teams.homeName) {
+      statisticsChampionshipSelected.forEach((element) => {
+        let index = dictionary.findIndex((item) => item.name === element);
+
+        if (index !== -1) {
+          const aux = dictionary[index].atributes.reduce(
+            (acc, item, i) =>
+              acc !== ""
+                ? `${acc}, ${dictionary[index].description[i]}: ${championship.extraTable[idx][item]}${dictionary[index].icon[i]}`
+                : `${dictionary[index].description[i]}: ${championship.extraTable[idx][item]}${dictionary[index].icon[i]}`,
+            ""
+          );
+          statisticsHomeResume.push(aux);
+        }
+      });
+    } else if (team.team === match.teams.awayName) {
+      statisticsChampionshipSelected.forEach((element) => {
+        let index = dictionary.findIndex((item) => item.name === element);
+
+        if (index !== -1) {
+          const aux = dictionary[index].atributes.reduce(
+            (acc, item, i) =>
+              acc !== ""
+                ? `${acc}, ${dictionary[index].description[i]}: ${championship.extraTable[idx][item]}${dictionary[index].icon[i]}`
+                : `${dictionary[index].description[i]}: ${championship.extraTable[idx][item]}${dictionary[index].icon[i]}`,
+            ""
+          );
+          statisticsAwayResume.push(aux);
+        }
+      });
+    }
+  });
+
+  return `Estatísticas do campeonato ${championship.name}:\n\n${
+    match.teams.homeName
+  } - ${statisticsHomeResume.join(", ")}.\n${
+    match.teams.awayName
+  } - ${statisticsAwayResume.join(", ")}.`;
+}
+
 export async function getPrevisionResponse(req, res, next) {
   try {
     let body = req.body;
     let {
+      matchSelected,
+      matchsCounter,
       model,
       language,
       shotsLearning,
-      matchsCounter,
       statisticsSelected,
       statisticsChampionshipSelected,
     } = body;
+
+    let match = await matchsDAO.getMatchByID(matchSelected);
+    match = match[0];
+
+    let homeLastMatchs = await matchsDAO.getPastMatchsByTeamWithLimit(
+      match.teams.homeId,
+      match.date,
+      matchsCounter
+    );
+    let awayLastMatchs = await matchsDAO.getPastMatchsByTeamWithLimit(
+      match.teams.awayId,
+      match.date,
+      matchsCounter
+    );
+
+    let championship = await championshipsDAO.getChampionshipByChampionshipUrl(
+      match.championshipUrl
+    );
+    championship = championship[0];
+
+    const matchPresentation = getMatchPresentation([match], []);
+
+    const homeMatchsPresentation = getMatchPresentation(
+      homeLastMatchs,
+      statisticsSelected
+    );
+    const awayMatchsPresentation = getMatchPresentation(
+      awayLastMatchs,
+      statisticsSelected
+    );
+
+    const championshipPresentation = getChampionshipPresentation(
+      championship,
+      match,
+      statisticsChampionshipSelected
+    );
+
     const response = await GPTPrevision({
       model,
       language,
@@ -83,10 +193,27 @@ export async function getPrevisionResponse(req, res, next) {
       matchsCounter,
       statisticsSelected,
       statisticsChampionshipSelected,
+      match,
+      matchPresentation,
+      homeMatchsPresentation,
+      awayMatchsPresentation,
+      homeLastMatchs,
+      awayLastMatchs,
+      championshipPresentation,
     });
 
     res.status(200).json({
-      data: response,
+      data: {
+        match: match,
+        matchPresentation,
+        homeMatchsPresentation,
+        awayMatchsPresentation,
+        homeLastMatchs,
+        awayLastMatchs,
+        championship,
+        championshipPresentation,
+        prevision: response,
+      },
     });
 
     return;
@@ -96,3 +223,92 @@ export async function getPrevisionResponse(req, res, next) {
     return;
   }
 }
+
+const dictionary = [
+  {
+    name: "Posição",
+    atributes: ["num"],
+    description: ["Posição"],
+    icon: ["°"],
+  },
+  {
+    name: "Pts/J/V/E/D",
+    atributes: ["pts", "mp", "w", "d", "l"],
+    description: ["Pontos", "Jogos", "Vitórias", "Empates", "Derrotas"],
+    icon: ["", "", "", "", ""],
+  },
+  {
+    name: "Sh/SoT/SoT%",
+    atributes: ["sh", "sot", "sotp"],
+    description: ["Chutes", "Chutes ao alvo", "Porcentagem de chutes ao alvo"],
+    icon: ["", "", "%"],
+  },
+  {
+    name: "GM/GS/SG",
+    atributes: ["gf", "ga", "gd"],
+    description: ["Gols marcados", "Gols sofridos", "Saldo de gols"],
+    icon: ["", "", ""],
+  },
+  {
+    name: "xG/xGA/xGD",
+    atributes: ["xg", "xga", "xgd"],
+    description: [
+      "Gols esperados (xG)",
+      "Gols esperados contra (xGA)",
+      "Gols esperados diferença (xGD)",
+    ],
+    icon: ["", "", ""],
+  },
+  {
+    name: "Poss/Cmp/Cmpp",
+    atributes: ["poss", "cmp", "cmpp"],
+    description: [
+      "Média de posse de bola",
+      "Passes completos",
+      "Porcentagem de passes completos",
+    ],
+    icon: ["", "", "%"],
+  },
+  {
+    name: "PrgC/PrgP",
+    atributes: ["prgc", "prgp"],
+    description: ["Corridas progressivas", "Passes progressivos"],
+    icon: ["", ""],
+  },
+  {
+    name: "Faltas cometidas",
+    atributes: ["fls"],
+    description: ["Faltas cometidas"],
+    icon: [""],
+  },
+  {
+    name: "Cartões amarelos e vermelhos",
+    atributes: ["crdy", "crdr"],
+    description: ["Cartões amarelos", "Cartões vermelhos"],
+    icon: ["", ""],
+  },
+  {
+    name: "Clean Sheets",
+    atributes: ["cs"],
+    description: ["Clean Sheets"],
+    icon: [""],
+  },
+  {
+    name: "Escanteios cobrados",
+    atributes: ["ck"],
+    description: ["Escanteios cobrados"],
+    icon: [""],
+  },
+  {
+    name: "Idade média do elenco",
+    atributes: ["age"],
+    description: ["Idade média do elenco"],
+    icon: [""],
+  },
+  {
+    name: "Salário do elenco",
+    atributes: ["ww"],
+    description: ["Salário semanal do elenco"],
+    icon: [""],
+  },
+];

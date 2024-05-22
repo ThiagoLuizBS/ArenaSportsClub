@@ -74,7 +74,7 @@ export default class championshipsExtraDataCrawler {
                     var xga = $(this).find("td:nth-child(13)").text().trim();
                     var xgd = $(this).find("td:nth-child(14)").text().trim();
                     var attendance = $(this)
-                      .find("td:nth-child(17)")
+                      .find("td:nth-child(16)")
                       .text()
                       .trim();
                     var notes = $(this).find("td:nth-child(20)").text().trim();

@@ -590,6 +590,33 @@ export default class matchsDAO {
     }
   }
 
+  static async getPastMatchsByTeamWithLimit(id, date, limitCount) {
+    try {
+      const pipeline = [
+        {
+          $match: {
+            $or: [{ "teams.homeId": id }, { "teams.awayId": id }],
+            date: { $lt: date },
+            status: { $eq: "ENCERRADO" },
+          },
+        },
+        {
+          $sort: {
+            date: -1,
+          },
+        },
+        { $limit: limitCount },
+      ];
+
+      return await matchs.aggregate(pipeline).toArray();
+    } catch (e) {
+      console.error(
+        `Something went wrong in getPastMatchsByTeamWithLimit: ${e}`
+      );
+      throw e;
+    }
+  }
+
   static async updateYesterday(match, dateToday) {
     try {
       if (match?.date < dateToday && match?.status !== "ENCERRADO") {

@@ -99,8 +99,6 @@ export default class matchsController {
           teamAwayId
         );
 
-        console.log(match.idMatch);
-
         var { error } = response;
         if (error) {
           return { error };

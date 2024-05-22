@@ -30,12 +30,12 @@ export function Predictions() {
   const [model, setModel] = useState("gpt-3.5-turbo");
   const [language, setLanguage] = useState("Português");
   const [shotsLearning, setShotsLearning] = useState("One-shot");
-  const [matchSelected, setMatchSelected] = useState("");
+  const [matchSelected, setMatchSelected] = useState("11531");
   const [matchsCounter, setMatchsCounter] = useState(6);
   const statisticsList = [
-    "Posse de bola",
+    "Posse de bola (%)",
     "Total de passes",
-    "Passes corretos",
+    "Passes corretos (%)",
     "Total de chutes",
     "Chutes no gol",
     "Escanteios",
@@ -47,7 +47,6 @@ export function Predictions() {
     "GM/GS/SG",
     "xG/xGA/xGD",
     "Sh/SoT/SoT%",
-    "GSh/GSoT",
     "Poss/Cmp/Cmpp",
     "PrgC/PrgP",
     "Faltas cometidas",
@@ -56,7 +55,6 @@ export function Predictions() {
     "Escanteios cobrados",
     "Idade média do elenco",
     "Salário do elenco",
-    "Público médio",
   ];
 
   const [statisticsSelected, setStatisticsSelected] = useState([]);
@@ -102,6 +100,7 @@ export function Predictions() {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(
+      matchSelected,
       model,
       language,
       shotsLearning,
@@ -109,7 +108,8 @@ export function Predictions() {
       statisticsSelected,
       statisticsChampionshipSelected
     );
-    if (model === "") setError("Preencha todos os campos!");
+    if (matchSelected === "")
+      setError("Selecione uma partida antes de realizar a previsão!");
     else {
       setResponse("");
       previsionService
@@ -120,6 +120,7 @@ export function Predictions() {
           matchsCounter,
           statisticsSelected,
           statisticsChampionshipSelected,
+          matchSelected,
         })
         .then((response) => {
           setError("");
@@ -347,7 +348,7 @@ export function Predictions() {
 
       {response !== "" ? (
         <div className="prevision-results" style={{ margin: "16px 0" }}>
-          <h1>{response.split("\n")[0]}</h1>
+          <h1>{response.prevision.split("\n")[0]}</h1>
 
           <div>
             <span>Vitória</span>
@@ -356,10 +357,22 @@ export function Predictions() {
           </div>
 
           <div>
-            <span>{response.split("\n")[1].split("|")[0].match(/\d+/)}%</span>
-            <span>{response.split("\n")[1].split("|")[1].match(/\d+/)}%</span>
-            <span>{response.split("\n")[1].split("|")[2].match(/\d+/)}%</span>
+            <span>
+              {response.prevision.split("\n")[1].split("|")[0].match(/\d+/)}%
+            </span>
+            <span>
+              {response.prevision.split("\n")[1].split("|")[1].match(/\d+/)}%
+            </span>
+            <span>
+              {response.prevision.split("\n")[1].split("|")[2].match(/\d+/)}%
+            </span>
           </div>
+
+          {/* <div>
+            <span>{response.matchPresentation}</span>
+            <span>{response.homeMatchsPresentation}</span>
+            <span>{response.awayMatchsPresentation}</span>
+          </div> */}
         </div>
       ) : (
         <div
@@ -371,7 +384,9 @@ export function Predictions() {
           }}
         >
           <Spinner animation="border" />
-          <span style={{ margin: "0 16px" }}>Aguardando previsão</span>
+          <span style={{ margin: "0 16px" }}>
+            Aguardando geração da previsão
+          </span>
         </div>
       )}
     </Container>
