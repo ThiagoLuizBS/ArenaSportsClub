@@ -21,6 +21,7 @@ export function AppRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/noticias" element={<News />} />
         <Route path="/previsoes" element={<Predictions />} />
+        <Route path="/previsoes/:id" element={<Predictions />} />
         <Route path="/campeonato/:id" element={<Championship />} />
         <Route path="/partida/:id" element={<Match />} />
         <Route path="/equipe/:id" element={<Team />} />

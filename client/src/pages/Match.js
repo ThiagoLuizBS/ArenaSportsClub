@@ -154,6 +154,21 @@ export function Match() {
                     <p className="p_matchStadium"></p>
                   )}
 
+                  <div className="button-group-match" style={{ width: "100%" }}>
+                    <Link to={`/previsoes/${id}`} className="link-results">
+                      <Button
+                        variant="success"
+                        id="button-match"
+                        style={{
+                          backgroundColor: "#198754",
+                          borderColor: "#198754",
+                        }}
+                      >
+                        PREVER PARTIDA
+                      </Button>
+                    </Link>
+                  </div>
+
                   <div className="button-group-match">
                     <Button
                       id={

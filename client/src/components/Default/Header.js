@@ -139,7 +139,7 @@ export function Header() {
               <Link
                 to="/previsoes"
                 className={
-                  location.pathname === "/previsoes"
+                  location.pathname.includes("/previsoes")
                     ? "match-header"
                     : "link-header"
                 }

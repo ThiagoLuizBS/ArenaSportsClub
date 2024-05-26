@@ -21,12 +21,45 @@ export async function GPTPrevision(data) {
           
           Seu trabalho será analisar essas informações, principalmente os resultados anteriores de cada equipe e fazer uma previsão do resultado da partida que irá acontecer. A sua resposta deverá  seguir o modelo abaixo de tabela:
           
-          Time X - Time Y
-          Probabilidade Time X  vitória   | Empate       | Probabilidade Time Y  vitória
-          45%                             | 20%          | 25%
+          Time X x Time Y
+          Probabilidade Time X vitória: 45% | Empate: 20% | Probabilidade Time Y vitória: 25%
           
           Agora irei te fornecer uma partida por vez, cada uma com suas informações e o histórico de cada partida. Faça sua análise de dados e me forneça apenas a tabela como resposta.
           `,
+        },
+        {
+          role: "user",
+          content: `Partida:
+          
+          """
+          Hellas Verona x Inter de Milão, campeonato Campeonato Italiano - 2023/2024, local Stadio Marc'Antonio Bentegodi (Verona), data 26/05/2024.
+
+          Histórico de partidas do Hellas Verona:
+          Salernitana 1 x 2 Hellas Verona, campeonato Campeonato Italiano - 2023/2024, local Stadio Arechi (Salerno), data 20/05/2024. Posse de bola (%): 54% - 46%, Total de passes: 415 - 351, Passes corretos (%): 75% - 70%, Total de chutes: 9 - 17, Chutes no gol: 1 - 5.
+          Hellas Verona 1 x 2 Torino, campeonato Campeonato Italiano - 2023/2024, local Stadio Marc'Antonio Bentegodi (Verona), data 12/05/2024. Posse de bola (%): 54% - 46%, Total de passes: 415 - 351, Passes corretos (%): 75% - 70%, Total de chutes: 9 - 17, Chutes no gol: 1 - 5, Posse de bola (%): 43% - 57%, Total de passes: 330 - 454, Passes corretos (%): 70% - 80%, Total de chutes: 13 - 6, Chutes no gol: 5 - 2.
+          Hellas Verona 2 x 1 Fiorentina, campeonato Campeonato Italiano - 2023/2024, local Stadio Marc'Antonio Bentegodi (Verona), data 05/05/2024. Posse de bola (%): 54% - 46%, Total de passes: 415 - 351, Passes corretos (%): 75% - 70%, Total de chutes: 9 - 17, Chutes no gol: 1 - 5, Posse de bola (%): 43% - 57%, Total de passes: 330 - 454, Passes corretos (%): 70% - 80%, Total de chutes: 13 - 6, Chutes no gol: 5 - 2, Posse de bola (%): 38% - 62%, Total de passes: 275 - 464, Passes corretos (%): 65% - 72%, Total de chutes: 9 - 13, Chutes no gol: 4 - 4.
+          Lazio 1 x 0 Hellas Verona, campeonato Campeonato Italiano - 2023/2024, local Stadio Olimpico (Romagnano Sesia), data 27/04/2024. Posse de bola (%): 54% - 46%, Total de passes: 415 - 351, Passes corretos (%): 75% - 70%, Total de chutes: 9 - 17, Chutes no gol: 1 - 5, Posse de bola (%): 43% - 57%, Total de passes: 330 - 454, Passes corretos (%): 70% - 80%, Total de chutes: 13 - 6, Chutes no gol: 5 - 2, Posse de bola (%): 38% - 62%, Total de passes: 275 - 464, Passes corretos (%): 65% - 72%, Total de chutes: 9 - 13, Chutes no gol: 4 - 4, Posse de bola (%): 69% - 31%, Total de passes: 532 - 232, Passes corretos (%): 84% - 62%, Total de chutes: 17 - 7, Chutes no gol: 5 - 1.
+          Hellas Verona 1 x 0 Udinese, campeonato Campeonato Italiano - 2023/2024, local Stadio Marc'Antonio Bentegodi (Verona), data 20/04/2024. Posse de bola (%): 54% - 46%, Total de passes: 415 - 351, Passes corretos (%): 75% - 70%, Total de chutes: 9 - 17, Chutes no gol: 1 - 5, Posse de bola (%): 43% - 57%, Total de passes: 330 - 454, Passes corretos (%): 70% - 80%, Total de chutes: 13 - 6, Chutes no gol: 5 - 2, Posse de bola (%): 38% - 62%, Total de passes: 275 - 464, Passes corretos (%): 65% - 72%, Total de chutes: 9 - 13, Chutes no gol: 4 - 4, Posse de bola (%): 69% - 31%, Total de passes: 532 - 232, Passes corretos (%): 84% - 62%, Total de chutes: 17 - 7, Chutes no gol: 5 - 1, Posse de bola (%): 53% - 47%, Total de passes: 330 - 307, Passes corretos (%): 69% - 73%, Total de chutes: 16 - 18, Chutes no gol: 4 - 1.
+          Atalanta 2 x 2 Hellas Verona, campeonato Campeonato Italiano - 2023/2024, local Gewiss Stadium (Bergamo), data 15/04/2024. Posse de bola (%): 54% - 46%, Total de passes: 415 - 351, Passes corretos (%): 75% - 70%, Total de chutes: 9 - 17, Chutes no gol: 1 - 5, Posse de bola (%): 43% - 57%, Total de passes: 330 - 454, Passes corretos (%): 70% - 80%, Total de chutes: 13 - 6, Chutes no gol: 5 - 2, Posse de bola (%): 38% - 62%, Total de passes: 275 - 464, Passes corretos (%): 65% - 72%, Total de chutes: 9 - 13, Chutes no gol: 4 - 4, Posse de bola (%): 69% - 31%, Total de passes: 532 - 232, Passes corretos (%): 84% - 62%, Total de chutes: 17 - 7, Chutes no gol: 5 - 1, Posse de bola (%): 53% - 47%, Total de passes: 330 - 307, Passes corretos (%): 69% - 73%, Total de chutes: 16 - 18, Chutes no gol: 4 - 1, Posse de bola (%): 59% - 41%, Total de passes: 501 - 340, Passes corretos (%): 77% - 67%, Total de chutes: 16 - 13, Chutes no gol: 9 - 5.
+          
+          Histórico de partidas do Inter de Milão:
+          Inter de Milão 1 x 1 Lazio, campeonato Campeonato Italiano - 2023/2024, local Stadio Giuseppe Meazza (Milan), data 19/05/2024. Posse de bola (%): 58% - 0%, Total de passes: 576 - 216, Passes corretos (%): 90% - 162%, Total de chutes: 19 - 8, Chutes no gol: 7 - 4.
+          Frosinone 0 x 5 Inter de Milão, campeonato Campeonato Italiano - 2023/2024, local Stadio Benito Stirpe (Frosinone), data 10/05/2024. Posse de bola (%): 58% - 0%, Total de passes: 576 - 216, Passes corretos (%): 90% - 162%, Total de chutes: 19 - 8, Chutes no gol: 7 - 4, Posse de bola (%): 41% - 59%, Total de passes: 400 - 575, Passes corretos (%): 84% - 89%, Total de chutes: 17 - 14, Chutes no gol: 8 - 5.
+          Sassuolo 1 x 0 Inter de Milão, campeonato Campeonato Italiano - 2023/2024, local MAPEI Stadium - Città del Tricolore (Reggio Emilia), data 04/05/2024. Posse de bola (%): 58% - 0%, Total de passes: 576 - 216, Passes corretos (%): 90% - 162%, Total de chutes: 19 - 8, Chutes no gol: 7 - 4, Posse de bola (%): 41% - 59%, Total de passes: 400 - 575, Passes corretos (%): 84% - 89%, Total de chutes: 17 - 14, Chutes no gol: 8 - 5, Posse de bola (%): 24% - 76%, Total de passes: 230 - 720, Passes corretos (%): 70% - 91%, Total de chutes: 6 - 14, Chutes no gol: 2 - 2.
+          Inter de Milão 2 x 0 Torino, campeonato Campeonato Italiano - 2023/2024, local Stadio Giuseppe Meazza (Milan), data 28/04/2024. Posse de bola (%): 58% - 0%, Total de passes: 576 - 216, Passes corretos (%): 90% - 162%, Total de chutes: 19 - 8, Chutes no gol: 7 - 4, Posse de bola (%): 41% - 59%, Total de passes: 400 - 575, Passes corretos (%): 84% - 89%, Total de chutes: 17 - 14, Chutes no gol: 8 - 5, Posse de bola (%): 24% - 76%, Total de passes: 230 - 720, Passes corretos (%): 70% - 91%, Total de chutes: 6 - 14, Chutes no gol: 2 - 2, Posse de bola (%): 62% - 38%, Total de passes: 675 - 396, Passes corretos (%): 91% - 87%, Total de chutes: 17 - 11, Chutes no gol: 5 - 3.
+          Milan 1 x 2 Inter de Milão, campeonato Campeonato Italiano - 2023/2024, local Stadio Giuseppe Meazza (Milano), data 22/04/2024. Posse de bola (%): 58% - 0%, Total de passes: 576 - 216, Passes corretos (%): 90% - 162%, Total de chutes: 19 - 8, Chutes no gol: 7 - 4, Posse de bola (%): 41% - 59%, Total de passes: 400 - 575, Passes corretos (%): 84% - 89%, Total de chutes: 17 - 14, Chutes no gol: 8 - 5, Posse de bola (%): 24% - 76%, Total de passes: 230 - 720, Passes corretos (%): 70% - 91%, Total de chutes: 6 - 14, Chutes no gol: 2 - 2, Posse de bola (%): 62% - 38%, Total de passes: 675 - 396, Passes corretos (%): 91% - 87%, Total de chutes: 17 - 11, Chutes no gol: 5 - 3, Posse de bola (%): 52% - 48%, Total de passes: 510 - 478, Passes corretos (%): 87% - 85%, Total de chutes: 15 - 11, Chutes no gol: 6 - 3.
+          Inter de Milão 2 x 2 Cagliari, campeonato Campeonato Italiano - 2023/2024, local Stadio Giuseppe Meazza (Milano), data 14/04/2024. Posse de bola (%): 58% - 0%, Total de passes: 576 - 216, Passes corretos (%): 90% - 162%, Total de chutes: 19 - 8, Chutes no gol: 7 - 4, Posse de bola (%): 41% - 59%, Total de passes: 400 - 575, Passes corretos (%): 84% - 89%, Total de chutes: 17 - 14, Chutes no gol: 8 - 5, Posse de bola (%): 24% - 76%, Total de passes: 230 - 720, Passes corretos (%): 70% - 91%, Total de chutes: 6 - 14, Chutes no gol: 2 - 2, Posse de bola (%): 62% - 38%, Total de passes: 675 - 396, Passes corretos (%): 91% - 87%, Total de chutes: 17 - 11, Chutes no gol: 5 - 3, Posse de bola (%): 52% - 48%, Total de passes: 510 - 478, Passes corretos (%): 87% - 85%, Total de chutes: 15 - 11, Chutes no gol: 6 - 3, Posse de bola (%): 63% - 37%, Total de passes: 617 - 368, Passes corretos (%): 92% - 86%, Total de chutes: 15 - 10, Chutes no gol: 7 - 6.
+
+          Estatísticas do campeonato Campeonato Italiano - 2023/2024:
+
+          Hellas Verona - Posição: 14°, Pontos: 37, Jogos: 37, Vitórias: 8, Empates: 13, Derrotas: 16, Gols marcados: 32, Gols sofridos: 54, Saldo de gols: -22, Gols esperados (xG): 42.6, Gols esperados contra (xGA): 51.9, Gols esperados diferença (xGD): -9.2, Chutes: 493, Chutes ao alvo: 147, Porcentagem de chutes ao alvo: 29.8%.
+          Inter de Milão - Posição: 1°, Pontos: 93, Jogos: 37, Vitórias: 29, Empates: 6, Derrotas: 2, Gols marcados: 87, Gols sofridos: 20, Saldo de gols: +67, Gols esperados (xG): 75.9, Gols esperados contra (xGA): 29.4, Gols esperados diferença (xGD): +46.5, Chutes: 565, Chutes ao alvo: 186, Porcentagem de chutes ao alvo: 32.9%.
+          """
+          `,
+        },
+        {
+          role: "assistant",
+          content: `Hellas Verona x Inter de Milão\nProbabilidade Hellas Verona vitória: 15% | Empate: 20% | Probabilidade Inter de Milão vitória: 65%`,
         },
         {
           role: "user",
@@ -48,7 +81,7 @@ export async function GPTPrevision(data) {
       ],
     });
 
-    return chatCompletion.data.choices[0].message.content;
+    return chatCompletion.data;
   } catch (error) {
     if (error.response) {
       console.log(error.response.status);
@@ -77,13 +110,24 @@ function getMatchPresentation(matchs, statistics) {
         );
     });
 
-    matchResume.push(
-      `${match.teams.homeName} x ${match.teams.awayName}, campeonato ${
-        match.championship
-      }, local ${match.stadium}, data ${match.day}.${
-        statisticsResume.length > 0 ? ` ${statisticsResume.join(", ")}.` : ``
-      }`
-    );
+    if (matchs.length > 1)
+      matchResume.push(
+        `${match.teams.homeName} ${match.scoreHome} x ${match.scoreAway} ${
+          match.teams.awayName
+        }, campeonato ${match.championship}, local ${match.stadium}, data ${
+          match.day
+        }.${
+          statisticsResume.length > 0 ? ` ${statisticsResume.join(", ")}.` : ``
+        }`
+      );
+    else
+      matchResume.push(
+        `${match.teams.homeName} x ${match.teams.awayName}, campeonato ${
+          match.championship
+        }, local ${match.stadium}, data ${match.day}.${
+          statisticsResume.length > 0 ? ` ${statisticsResume.join(", ")}.` : ``
+        }`
+      );
   });
   return matchResume.join("\n");
 }
@@ -204,15 +248,31 @@ export async function getPrevisionResponse(req, res, next) {
 
     res.status(200).json({
       data: {
-        match: match,
-        matchPresentation,
-        homeMatchsPresentation,
-        awayMatchsPresentation,
+        match,
         homeLastMatchs,
         awayLastMatchs,
         championship,
+      },
+      prompt: {
+        matchPresentation,
+        homeMatchsPresentation,
+        awayMatchsPresentation,
         championshipPresentation,
-        prevision: response,
+      },
+      promptOptions: {
+        matchSelected,
+        matchsCounter,
+        model,
+        language,
+        shotsLearning,
+        statisticsSelected,
+        statisticsChampionshipSelected,
+      },
+      response: {
+        prevision: response.choices[0].message.content,
+        created: new Date(response.created * 1000),
+        promptTokens: response.usage.prompt_tokens,
+        responseTokens: response.usage.completion_tokens,
       },
     });
 

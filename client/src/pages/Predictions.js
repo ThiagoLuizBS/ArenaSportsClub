@@ -1,37 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import { Form } from "react-bootstrap";
-import { Container, Button, Col, Spinner } from "react-bootstrap";
+import { Container, Button, Col, Spinner, ListGroup } from "react-bootstrap";
+import { Link, useParams } from "react-router-dom";
+import previsionService from "../services/prevision.js";
 import MatchDataService from "../services/match.js";
 import "../styles/pages/Predictions.css";
-import previsionService from "../services/prevision.js";
 
 export function Predictions() {
-  const getTodayDate = (x) => {
-    var date = new Date();
-    date.setDate(date.getDate() + x);
-    let day = date.getDate();
-    let month = date.getMonth() + 1;
-    let year = date.getFullYear();
-    if (day < 10) day = "0" + day;
-    if (month < 10) month = "0" + month;
-    return day + "-" + month + "-" + year;
-  };
-
-  const getFilterSelect = (x) => {
-    var date = getTodayDate(x);
-    date = date.replace("-", "/");
-    date = date.replace("-2023", "");
-    return date;
-  };
-
-  const [matchsData, setMatchsData] = useState([]);
-  const [dateFilter, setDateFilter] = useState(getTodayDate(0));
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [response, setResponse] = useState("");
+  let { id } = useParams();
+  const [listMatch, setListMatch] = useState([]);
+
   const [model, setModel] = useState("gpt-3.5-turbo");
   const [language, setLanguage] = useState("Português");
   const [shotsLearning, setShotsLearning] = useState("One-shot");
-  const [matchSelected, setMatchSelected] = useState("11531");
   const [matchsCounter, setMatchsCounter] = useState(6);
+  const [statisticsSelected, setStatisticsSelected] = useState([]);
+  const [statisticsChampionshipSelected, setStatisticsChampionshipSelected] =
+    useState([]);
+
+  const modelsList = ["gpt-3.5-turbo", "gpt-4", "gpt-4o"];
+  const languagesList = ["Português", "Inglês"];
+  const shotsLearningsList = ["Zero-shot", "One-shot", "Three-shots"];
+
   const statisticsList = [
     "Posse de bola (%)",
     "Total de passes",
@@ -57,15 +50,12 @@ export function Predictions() {
     "Salário do elenco",
   ];
 
-  const [statisticsSelected, setStatisticsSelected] = useState([]);
-  const [statisticsChampionshipSelected, setStatisticsChampionshipSelected] =
-    useState([]);
-  const [error, setError] = useState("");
-  const [response, setResponse] = useState("");
-
-  const modelsList = ["gpt-3.5-turbo", "gpt-4", "gpt-4o"];
-  const languagesList = ["Português", "Inglês"];
-  const shotsLearningsList = ["Zero-shot", "One-shot", "Three-shots"];
+  useEffect(() => {
+    if (!!id)
+      MatchDataService.getMatch(id).then((response) =>
+        setListMatch(response.data[0])
+      );
+  }, [id]);
 
   const changeStatisticsSelected = (event) => {
     if (event.target.checked)
@@ -89,47 +79,6 @@ export function Predictions() {
     }
   };
 
-  useEffect(() => {
-    MatchDataService.getMatchsByDate(dateFilter, []).then((response) => {
-      setMatchsData(response.data);
-      setLoading(false);
-    });
-    // eslint-disable-next-line
-  }, [dateFilter]);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(
-      matchSelected,
-      model,
-      language,
-      shotsLearning,
-      matchsCounter,
-      statisticsSelected,
-      statisticsChampionshipSelected
-    );
-    if (matchSelected === "")
-      setError("Selecione uma partida antes de realizar a previsão!");
-    else {
-      setResponse("");
-      previsionService
-        .getPrevision({
-          model,
-          language,
-          shotsLearning,
-          matchsCounter,
-          statisticsSelected,
-          statisticsChampionshipSelected,
-          matchSelected,
-        })
-        .then((response) => {
-          setError("");
-          setResponse(response.data.data);
-        })
-        .catch((response) => setError(response.response.data.error));
-    }
-  };
-
   const changeMinMatch = (match) => {
     let time;
     if (match?.time === "INTERVALO")
@@ -149,6 +98,32 @@ export function Predictions() {
     return time;
   };
 
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!!!id) setError("Selecione uma partida antes de realizar a previsão!");
+    else {
+      setLoading(true);
+      setResponse("");
+      await previsionService
+        .getPrevision({
+          model,
+          language,
+          shotsLearning,
+          matchsCounter,
+          statisticsSelected,
+          statisticsChampionshipSelected,
+          matchSelected: id,
+        })
+        .then((response) => {
+          setError("");
+          setResponse(response.data);
+        })
+        .catch((response) => setError(response.response.data.error))
+        .finally(() => setLoading(false));
+    }
+  };
+
   return (
     <Container>
       <div className="predictions-container">
@@ -160,31 +135,135 @@ export function Predictions() {
         </h5>
 
         <Form onSubmit={handleSubmit} className="my-4">
-          <Form.Group className="mb-3" controlId="formBasicSelect1">
-            <Form.Select
-              aria-label="selectMatch"
-              value={matchSelected}
-              onChange={(event) => setMatchSelected(event.target.value)}
-            >
-              <option value="" disabled hidden>
-                Selecione uma partida
-              </option>
+          <div className="button-predict mb-4">
+            {!!id ? (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "100%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "8px",
+                }}
+              >
+                <div
+                  style={{
+                    margin: "2px",
+                    display: "flex",
+                    flexDirection: "column",
+                    width: "100%",
+                  }}
+                >
+                  <ListGroup className="match">
+                    <Col
+                      md={1}
+                      sm={1}
+                      xs={1}
+                      className="align-results col-first-results"
+                    >
+                      {listMatch?.status === "AO VIVO" ? (
+                        <span className="matchs-text-results">
+                          {changeMinMatch(listMatch)}
+                        </span>
+                      ) : listMatch?.status === "ENCERRADO" ? (
+                        <span className="matchs-text-results">FIM</span>
+                      ) : (
+                        <span className="matchs-text-results">
+                          {listMatch.schedule}
+                        </span>
+                      )}
+                    </Col>
+                    <Col
+                      className="align-team-home-results"
+                      md={3}
+                      sm={3}
+                      xs={3}
+                    >
+                      <span className="matchs-text-results name-team-results">
+                        {listMatch.teams?.homeName}
+                      </span>
+                    </Col>
+                    <Col className="align-results" md={1} sm={1} xs={1}>
+                      <img
+                        className="img-results"
+                        src={listMatch.teams?.homeImg}
+                        alt={`${listMatch.teams?.homeName}`}
+                        title={`${listMatch.teams?.homeName}`}
+                      />
+                    </Col>
 
-              {matchsData?.map((championship, index) =>
-                championship?.matchs.map((match, i) => (
-                  <option key={`${index}-${i}`} value={match.idMatch}>
-                    {`${championship._id.championship} - `}
-                    {match?.status === "AO VIVO"
-                      ? `${changeMinMatch(match)}`
-                      : match?.status === "ENCERRADO"
-                      ? `FIM`
-                      : `${match.schedule}`}
-                    {` - ${match.teams?.homeName} ${match.scoreHome} - ${match.scoreAway} ${match.teams?.awayName}`}
-                  </option>
-                ))
-              )}
-            </Form.Select>
-          </Form.Group>
+                    <Col className="align-results" md={2} sm={2} xs={2}>
+                      <Col className="align-results" md={5} sm={5} xs={5}>
+                        <span className="match-number-results">
+                          {listMatch.scoreHome}
+                        </span>
+                      </Col>
+                      <Col className="align-results" md={2} sm={2} xs={2}>
+                        <span className="match-results">-</span>
+                      </Col>
+                      <Col className="align-results" md={5} sm={5} xs={5}>
+                        <span className="match-number-results">
+                          {listMatch.scoreAway}
+                        </span>
+                      </Col>
+                    </Col>
+
+                    <Col className="align-results" md={1} sm={1} xs={1}>
+                      <img
+                        className="img-results"
+                        src={listMatch.teams?.awayImg}
+                        alt={`${listMatch.teams?.awayName}`}
+                        title={`${listMatch.teams?.awayName}`}
+                      />
+                    </Col>
+                    <Col
+                      className="align-team-away-results"
+                      md={3}
+                      sm={3}
+                      xs={3}
+                    >
+                      <span className="matchs-text-results name-team-results">
+                        {listMatch.teams?.awayName}
+                      </span>
+                    </Col>
+                    <Col
+                      md={1}
+                      sm={1}
+                      xs={1}
+                      className="align-results col-first-results"
+                    ></Col>
+                  </ListGroup>
+                </div>
+
+                <div
+                  style={{
+                    width: "fit-content",
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: "16px",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Button
+                    variant="success"
+                    onClick={() => window.history.back()}
+                  >
+                    Voltar
+                  </Button>
+
+                  <Link to={`/`} className="link-results">
+                    <Button variant="success">Selecionar outra partida</Button>
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <Link to={`/`} className="link-results">
+                <Button variant="success">Selecionar uma partida</Button>
+              </Link>
+            )}
+          </div>
 
           <div className="row-statistics-predictions">
             <Col md={2} sm={10} xs={10}>
@@ -196,6 +275,7 @@ export function Predictions() {
                     <Form.Check
                       key={i}
                       inline
+                      disabled
                       label={item}
                       name="radio1"
                       type="radio"
@@ -217,6 +297,7 @@ export function Predictions() {
                     <Form.Check
                       key={i}
                       inline
+                      disabled
                       label={item}
                       name="radio3"
                       type="radio"
@@ -238,6 +319,7 @@ export function Predictions() {
                     <Form.Check
                       key={i}
                       inline
+                      disabled
                       label={item}
                       name="radio4"
                       type="radio"
@@ -336,43 +418,316 @@ export function Predictions() {
             </Col>
           </div>
 
-          <Form.Label className="error-login">{error}</Form.Label>
-
           <div className="button-predict">
             <Button variant="success" type="submit">
               Gerar previsão
             </Button>
           </div>
+
+          <Form.Label
+            className="error-login my-2"
+            style={{ display: "flex", justifyContent: "center" }}
+          >
+            {error}
+          </Form.Label>
         </Form>
       </div>
 
       {response !== "" ? (
-        <div className="prevision-results" style={{ margin: "16px 0" }}>
-          <h1>{response.prevision.split("\n")[0]}</h1>
+        <div>
+          <div
+            style={{ margin: "2px", display: "flex", flexDirection: "column" }}
+          >
+            <div className="championship-results">
+              <Link
+                target="_blank"
+                to={`/campeonato/${response.data.idChampionship}`}
+                className="link-results"
+              >
+                <span className="text-championship-results">
+                  {response.data.championship.name}
+                </span>
+              </Link>
+            </div>
 
-          <div>
-            <span>Vitória</span>
-            <span>Empate</span>
-            <span>Vitória</span>
+            <Link
+              target="_blank"
+              to={`/partida/${response.data.match.idMatch}`}
+              className="link-results"
+            >
+              <ListGroup className="match">
+                <Col className="align-team-home-results" md={3} sm={3} xs={3}>
+                  <span className="matchs-text-results name-team-results">
+                    {response.data.match.teams?.homeName}
+                  </span>
+                </Col>
+                <Col className="align-results" md={1} sm={1} xs={1}>
+                  <img
+                    className="img-results"
+                    src={response.data.match.teams?.homeImg}
+                    alt={`${response.data.match.teams?.homeName}`}
+                    title={`${response.data.match.teams?.homeName}`}
+                  />
+                </Col>
+                <Col className="align-results" md={2} sm={2} xs={2}>
+                  <Col className="align-results" md={2} sm={2} xs={2}>
+                    <span className="match-results">-</span>
+                  </Col>
+                </Col>
+                <Col className="align-results" md={1} sm={1} xs={1}>
+                  <img
+                    className="img-results"
+                    src={response.data.match.teams?.awayImg}
+                    alt={`${response.data.match.teams?.awayName}`}
+                    title={`${response.data.match.teams?.awayName}`}
+                  />
+                </Col>
+                <Col className="align-team-away-results" md={3} sm={3} xs={3}>
+                  <span className="matchs-text-results name-team-results">
+                    {response.data.match.teams?.awayName}
+                  </span>
+                </Col>
+              </ListGroup>
+            </Link>
+
+            <ListGroup className="match-prevision">
+              <Col className="align-team-home-results" md={4} sm={4} xs={4}>
+                <span className="matchs-text-results name-team-results">
+                  Vitória
+                </span>
+              </Col>
+              <Col className="align-results" md={4} sm={4} xs={4}>
+                <span className="matchs-text-results name-team-results">
+                  Empate
+                </span>
+              </Col>
+              <Col className="align-team-away-results" md={4} sm={4} xs={4}>
+                <span className="matchs-text-results name-team-results">
+                  Vitória
+                </span>
+              </Col>
+            </ListGroup>
+
+            <ListGroup className="match-prevision">
+              <Col className="align-team-home-results" md={4} sm={4} xs={4}>
+                <span className="matchs-text-results name-team-results">
+                  {response.response.prevision
+                    .split("\n")[1]
+                    .split("|")[0]
+                    .match(/\d+/)}
+                  %
+                </span>
+              </Col>
+              <Col className="align-results" md={4} sm={4} xs={4}>
+                <span className="matchs-text-results name-team-results">
+                  {response.response.prevision
+                    .split("\n")[1]
+                    .split("|")[1]
+                    .match(/\d+/)}
+                  %
+                </span>
+              </Col>
+              <Col className="align-team-away-results" md={4} sm={4} xs={4}>
+                <span className="matchs-text-results name-team-results">
+                  {response.response.prevision
+                    .split("\n")[1]
+                    .split("|")[2]
+                    .match(/\d+/)}
+                  %
+                </span>
+              </Col>
+            </ListGroup>
           </div>
 
-          <div>
-            <span>
-              {response.prevision.split("\n")[1].split("|")[0].match(/\d+/)}%
-            </span>
-            <span>
-              {response.prevision.split("\n")[1].split("|")[1].match(/\d+/)}%
-            </span>
-            <span>
-              {response.prevision.split("\n")[1].split("|")[2].match(/\d+/)}%
-            </span>
+          <div className="historic-prevision-container">
+            <div className="historic-prevision">
+              <div className="championship-results">
+                <span className="text-championship-results">
+                  {response.data.match.teams?.homeName} histórico de partidas
+                </span>
+              </div>
+
+              {response.data.homeLastMatchs.map((item, i) => (
+                <Fragment key={i}>
+                  <Link
+                    target="_blank"
+                    to={`/partida/${item.idMatch}`}
+                    className="link-results"
+                  >
+                    <ListGroup className="match">
+                      <Col
+                        className="align-team-home-results"
+                        md={3}
+                        sm={3}
+                        xs={3}
+                      >
+                        <span className="matchs-text-results name-team-results">
+                          {item.teams?.homeName}
+                        </span>
+                      </Col>
+                      <Col className="align-results" md={1} sm={1} xs={1}>
+                        <img
+                          className="img-results"
+                          src={item.teams?.homeImg}
+                          alt={`${item.teams?.homeName}`}
+                          title={`${item.teams?.homeName}`}
+                        />
+                      </Col>
+
+                      <Col className="align-results" md={2} sm={2} xs={2}>
+                        <Col className="align-results" md={5} sm={5} xs={5}>
+                          <span className="match-number-results">
+                            {item.scoreHome}
+                          </span>
+                        </Col>
+                        <Col className="align-results" md={2} sm={2} xs={2}>
+                          <span className="match-results">-</span>
+                        </Col>
+                        <Col className="align-results" md={5} sm={5} xs={5}>
+                          <span className="match-number-results">
+                            {item.scoreAway}
+                          </span>
+                        </Col>
+                      </Col>
+
+                      <Col className="align-results" md={1} sm={1} xs={1}>
+                        <img
+                          className="img-results"
+                          src={item.teams?.awayImg}
+                          alt={`${item.teams?.awayName}`}
+                          title={`${item.teams?.awayName}`}
+                        />
+                      </Col>
+                      <Col
+                        className="align-team-away-results"
+                        md={3}
+                        sm={3}
+                        xs={3}
+                      >
+                        <span className="matchs-text-results name-team-results">
+                          {item.teams?.awayName}
+                        </span>
+                      </Col>
+                    </ListGroup>
+                  </Link>
+                </Fragment>
+              ))}
+            </div>
+
+            <div className="historic-prevision">
+              <div className="championship-results">
+                <span className="text-championship-results">
+                  {response.data.match.teams?.awayName} histórico de partidas
+                </span>
+              </div>
+
+              {response.data.awayLastMatchs.map((item, i) => (
+                <Fragment key={i}>
+                  <Link
+                    target="_blank"
+                    to={`/partida/${item.idMatch}`}
+                    className="link-results"
+                  >
+                    <ListGroup className="match">
+                      <Col
+                        className="align-team-home-results"
+                        md={3}
+                        sm={3}
+                        xs={3}
+                      >
+                        <span className="matchs-text-results name-team-results">
+                          {item.teams?.homeName}
+                        </span>
+                      </Col>
+                      <Col className="align-results" md={1} sm={1} xs={1}>
+                        <img
+                          className="img-results"
+                          src={item.teams?.homeImg}
+                          alt={`${item.teams?.homeName}`}
+                          title={`${item.teams?.homeName}`}
+                        />
+                      </Col>
+
+                      <Col className="align-results" md={2} sm={2} xs={2}>
+                        <Col className="align-results" md={5} sm={5} xs={5}>
+                          <span className="match-number-results">
+                            {item.scoreHome}
+                          </span>
+                        </Col>
+                        <Col className="align-results" md={2} sm={2} xs={2}>
+                          <span className="match-results">-</span>
+                        </Col>
+                        <Col className="align-results" md={5} sm={5} xs={5}>
+                          <span className="match-number-results">
+                            {item.scoreAway}
+                          </span>
+                        </Col>
+                      </Col>
+
+                      <Col className="align-results" md={1} sm={1} xs={1}>
+                        <img
+                          className="img-results"
+                          src={item.teams?.awayImg}
+                          alt={`${item.teams?.awayName}`}
+                          title={`${item.teams?.awayName}`}
+                        />
+                      </Col>
+                      <Col
+                        className="align-team-away-results"
+                        md={3}
+                        sm={3}
+                        xs={3}
+                      >
+                        <span className="matchs-text-results name-team-results">
+                          {item.teams?.awayName}
+                        </span>
+                      </Col>
+                    </ListGroup>
+                  </Link>
+                </Fragment>
+              ))}
+            </div>
           </div>
 
-          {/* <div>
-            <span>{response.matchPresentation}</span>
-            <span>{response.homeMatchsPresentation}</span>
-            <span>{response.awayMatchsPresentation}</span>
-          </div> */}
+          <p
+            style={{
+              fontSize: "24px",
+              fontWeight: "bold",
+              textAlign: "center",
+            }}
+          >
+            Prompts
+          </p>
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px",
+              whiteSpace: "pre-line",
+            }}
+          >
+            <span>
+              <b>Partida: </b>
+              {`${response.prompt.matchPresentation}`}
+            </span>
+            <span>
+              <b>
+                {response.data.match.teams?.homeName} histórico de partidas:{" "}
+              </b>
+              {`${response.prompt.homeMatchsPresentation}`}
+            </span>
+            <span>
+              <b>
+                {response.data.match.teams?.awayName} histórico de partidas:{" "}
+              </b>
+              {response.prompt.awayMatchsPresentation}
+            </span>
+            <span>
+              <b>Campeonato: </b>
+              {response.prompt.championshipPresentation}
+            </span>
+          </div>
         </div>
       ) : (
         <div
@@ -384,9 +739,11 @@ export function Predictions() {
           }}
         >
           <Spinner animation="border" />
-          <span style={{ margin: "0 16px" }}>
-            Aguardando geração da previsão
-          </span>
+          {!loading && (
+            <span style={{ margin: "0 16px" }}>
+              Aguardando geração da previsão
+            </span>
+          )}
         </div>
       )}
     </Container>
