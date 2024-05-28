@@ -2,6 +2,7 @@ import { Configuration, OpenAIApi } from "openai";
 import dotenv from "dotenv";
 import matchsDAO from "../dao/matchsDAO.js";
 import championshipsDAO from "../dao/championshipsDAO.js";
+import previsionsDAO from "../dao/previsionsDAO.js";
 
 dotenv.config();
 
@@ -24,7 +25,7 @@ export async function GPTPrevision(data) {
           Time X x Time Y
           Probabilidade Time X vitória: 45% | Empate: 20% | Probabilidade Time Y vitória: 25%
           
-          Agora irei te fornecer uma partida por vez, cada uma com suas informações e o histórico de cada partida. Faça sua análise de dados e me forneça apenas a tabela como resposta.
+          Agora irei te fornecer uma partida por vez, cada uma com suas informações e o histórico de cada partida. Faça sua análise de dados no seu tempo e depois me forneça apenas a tabela como resposta.
           `,
         },
         {
@@ -275,6 +276,26 @@ export async function getPrevisionResponse(req, res, next) {
         responseTokens: response.usage.completion_tokens,
       },
     });
+
+    const data = {
+      promptOptions: {
+        matchSelected,
+        matchsCounter,
+        model,
+        language,
+        shotsLearning,
+        statisticsSelected,
+        statisticsChampionshipSelected,
+      },
+      response: {
+        prevision: response.choices[0].message.content,
+        created: new Date(response.created * 1000),
+        promptTokens: response.usage.prompt_tokens,
+        responseTokens: response.usage.completion_tokens,
+      },
+    };
+
+    previsionsDAO.addPrevision(data);
 
     return;
   } catch (e) {
