@@ -14,7 +14,6 @@ export function Predictions() {
   const [listMatch, setListMatch] = useState([]);
 
   const [model, setModel] = useState("gpt-3.5-turbo");
-  const [language, setLanguage] = useState("Português");
   const [shotsLearning, setShotsLearning] = useState("One-shot");
   const [matchsCounter, setMatchsCounter] = useState(6);
   const [statisticsSelected, setStatisticsSelected] = useState([]);
@@ -22,7 +21,6 @@ export function Predictions() {
     useState([]);
 
   const modelsList = ["gpt-3.5-turbo", "gpt-4", "gpt-4o"];
-  const languagesList = ["Português", "Inglês"];
   const shotsLearningsList = ["Zero-shot", "One-shot", "Three-shots"];
 
   const statisticsList = [
@@ -108,7 +106,6 @@ export function Predictions() {
       await previsionService
         .getPrevision({
           model,
-          language,
           shotsLearning,
           matchsCounter,
           statisticsSelected,
@@ -275,34 +272,11 @@ export function Predictions() {
                     <Form.Check
                       key={i}
                       inline
-                      disabled
                       label={item}
                       name="radio1"
                       type="radio"
                       checked={model === item}
                       onChange={(event) => setModel(event.target.id)}
-                      id={item}
-                    />
-                  ))}
-                </div>
-              </Form.Group>
-
-              <Form.Group className="mb-3" controlId="formBasicRadio3">
-                <Form.Label className="me-4 bold">
-                  Linguagem utilizada
-                </Form.Label>
-
-                <div className="rows-radio-1">
-                  {languagesList.map((item, i) => (
-                    <Form.Check
-                      key={i}
-                      inline
-                      disabled
-                      label={item}
-                      name="radio3"
-                      type="radio"
-                      checked={language === item}
-                      onChange={(event) => setLanguage(event.target.id)}
                       id={item}
                     />
                   ))}
@@ -319,7 +293,6 @@ export function Predictions() {
                     <Form.Check
                       key={i}
                       inline
-                      disabled
                       label={item}
                       name="radio4"
                       type="radio"
