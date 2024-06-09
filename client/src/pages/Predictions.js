@@ -331,7 +331,7 @@ export function Predictions() {
             <Col md={3} sm={10} xs={10}>
               <Form.Group className="mb-3" controlId="formBasicCheckbox1">
                 <Form.Label className="me-4 bold">
-                  Estatísticas das partidas (Max 5)
+                  Estatísticas das partidas
                 </Form.Label>
 
                 <div className="rows-radio-1">
@@ -339,10 +339,10 @@ export function Predictions() {
                     <Form.Check
                       key={i}
                       inline
-                      disabled={
-                        statisticsSelected.length > 4 &&
-                        !statisticsSelected.some((value) => value === item)
-                      }
+                      // disabled={
+                      //   statisticsSelected.length > 4 &&
+                      //   !statisticsSelected.some((value) => value === item)
+                      // }
                       label={item}
                       name={item}
                       type="checkbox"
@@ -360,7 +360,7 @@ export function Predictions() {
             <Col md={3} sm={10} xs={10}>
               <Form.Group className="mb-3" controlId="formBasicCheckbox2">
                 <Form.Label className="me-4 bold">
-                  Estatísticas do campeonato (Max 5)
+                  Estatísticas do campeonato
                 </Form.Label>
 
                 <div className="rows-radio-1">
@@ -370,12 +370,12 @@ export function Predictions() {
                       inline
                       label={item}
                       name={item}
-                      disabled={
-                        statisticsChampionshipSelected.length > 4 &&
-                        !statisticsChampionshipSelected.some(
-                          (value) => value === item
-                        )
-                      }
+                      // disabled={
+                      //   statisticsChampionshipSelected.length > 4 &&
+                      //   !statisticsChampionshipSelected.some(
+                      //     (value) => value === item
+                      //   )
+                      // }
                       type="checkbox"
                       checked={statisticsChampionshipSelected.some(
                         (value) => value === item
