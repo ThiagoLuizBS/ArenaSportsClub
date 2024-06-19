@@ -18,12 +18,12 @@ export async function GPTPrevision(data) {
     role: "system",
     content: `Você é um especialista matemático e grande conhecedor de futebol. Irei te fornecer algumas informações sobre uma partida de futebol que vai ocorrer. Essas informações incluem o nome de cada equipe, o local da partida e o histórico de partidas de cada equipe. O histórico contém informações das últimas ${data.matchsCounter} partidas, incluindo resultado, estatísticas, data e local da realização da partida. Também haverá estatísticas do campeonato em que a partida será realizada.
 
-    Seu trabalho é analisar essas informações, especialmente os resultados anteriores de cada equipe, e fazer uma previsão do resultado da partida que irá acontecer. Sua resposta deve seguir o modelo de tabela abaixo:
+    Seu trabalho será analisar todas essas informações em conjunto, especialmente o histórico de jogos de cada equipe e fazer uma previsão do resultado da partida que irá acontecer. Sua resposta deve seguir o modelo de tabela abaixo:
 
     Time X x Time Y
     Probabilidade Time X vitória: 45% | Empate: 20% | Probabilidade Time Y vitória: 25%
     
-    Agora irei te fornecer uma partida por vez, cada uma com suas informações e o histórico de cada partida. Faça sua análise de dados, tome o tempo necessário para realizar a análise e depois me forneça apenas a tabela como resposta.
+    Agora irei te fornecer uma partida por vez, cada uma com suas informações e o histórico de partidas de cada equipe. Analise minuciosamente todas as informações disponibilizadas e após isso me forneça apenas a tabela como resposta.
     `,
   });
 
@@ -161,6 +161,7 @@ export async function GPTPrevision(data) {
     const chatCompletion = await openai.createChatCompletion({
       model: data.model,
       messages,
+      temperature: +data.temperature,
     });
 
     return chatCompletion.data;
@@ -214,6 +215,67 @@ function getMatchPresentation(matchs, statistics) {
   return matchResume.join("\n");
 }
 
+function getMatchPresentationMedium(matchSelected, side, matchs, statistics) {
+  let matchResume = [];
+  let statisticsResume = [];
+
+  statistics.forEach((element, i) => {
+    let valueAccumulatedHome = 0;
+    let valueAccumulatedAway = 0;
+
+    matchs.forEach((match) => {
+      if (i === 0) {
+        if (matchs.length > 1)
+          matchResume.push(
+            `${match.teams.homeName} ${match.scoreHome} x ${match.scoreAway} ${match.teams.awayName}, campeonato ${match.championship}, local ${match.stadium}, data ${match.day}.`
+          );
+        else
+          matchResume.push(
+            `${match.teams.homeName} x ${match.teams.awayName}, campeonato ${match.championship}, local ${match.stadium}, data ${match.day}.`
+          );
+      }
+
+      let index = match.statistics.findIndex((item) => item.type === element);
+
+      if (index !== -1) {
+        if (side === "home") {
+          if (matchSelected.teams.homeName === match.teams.homeName) {
+            valueAccumulatedHome += +match.statistics[index].home;
+            valueAccumulatedAway += +match.statistics[index].away;
+          } else if (matchSelected.teams.homeName === match.teams.awayName) {
+            valueAccumulatedHome += +match.statistics[index].away;
+            valueAccumulatedAway += +match.statistics[index].home;
+          }
+        } else {
+          if (matchSelected.teams.awayName === match.teams.homeName) {
+            valueAccumulatedHome += +match.statistics[index].home;
+            valueAccumulatedAway += +match.statistics[index].away;
+          } else if (matchSelected.teams.awayName === match.teams.awayName) {
+            valueAccumulatedHome += +match.statistics[index].away;
+            valueAccumulatedAway += +match.statistics[index].home;
+          }
+        }
+      }
+    });
+
+    statisticsResume.push(
+      `${element}: ${(valueAccumulatedHome / matchs.length).toFixed(2)}${
+        element.includes("%") ? "%" : ""
+      } - ${(valueAccumulatedAway / matchs.length).toFixed(2)}${
+        element.includes("%") ? "%" : ""
+      }`
+    );
+  });
+
+  const resumeMatch = `\nSegue a média das estatísticas das últimas partidas do ${
+    side === "home"
+      ? matchSelected.teams.homeName
+      : matchSelected.teams.awayName
+  } do lado esquerdo, do lado direito é a média das equipes adversárias: `;
+
+  return matchResume.join("\n") + resumeMatch + statisticsResume.join(", ");
+}
+
 function getChampionshipPresentation(
   championship,
   match,
@@ -221,6 +283,8 @@ function getChampionshipPresentation(
 ) {
   let statisticsHomeResume = [];
   let statisticsAwayResume = [];
+
+  if (statisticsChampionshipSelected.length < 1) return "";
 
   championship.table[0].table.forEach((team, idx) => {
     if (team.team === match.teams.homeName) {
@@ -269,6 +333,9 @@ export async function getPrevisionResponse(req, res, next) {
     let {
       matchSelected,
       matchsCounter,
+      historicType,
+      statisticsType,
+      temperature,
       model,
       shotsLearning,
       statisticsSelected,
@@ -285,16 +352,31 @@ export async function getPrevisionResponse(req, res, next) {
     let match = await matchsDAO.getMatchByID(matchSelected);
     match = match[0];
 
-    let homeLastMatchs = await matchsDAO.getPastMatchsByTeamWithLimit(
-      match.teams.homeId,
-      match.date,
-      matchsCounter
-    );
-    let awayLastMatchs = await matchsDAO.getPastMatchsByTeamWithLimit(
-      match.teams.awayId,
-      match.date,
-      matchsCounter
-    );
+    let homeLastMatchs =
+      historicType === "Todas"
+        ? await matchsDAO.getPastMatchsByTeamWithLimit(
+            match.teams.homeId,
+            match.date,
+            matchsCounter
+          )
+        : await matchsDAO.getHomePastMatchsByTeamWithLimit(
+            match.teams.homeId,
+            match.date,
+            matchsCounter
+          );
+
+    let awayLastMatchs =
+      historicType === "Todas"
+        ? await matchsDAO.getPastMatchsByTeamWithLimit(
+            match.teams.awayId,
+            match.date,
+            matchsCounter
+          )
+        : await matchsDAO.getAwayPastMatchsByTeamWithLimit(
+            match.teams.awayId,
+            match.date,
+            matchsCounter
+          );
 
     let championship = await championshipsDAO.getChampionshipByChampionshipUrl(
       match.championshipUrl
@@ -303,14 +385,25 @@ export async function getPrevisionResponse(req, res, next) {
 
     const matchPresentation = getMatchPresentation([match], []);
 
-    const homeMatchsPresentation = getMatchPresentation(
-      homeLastMatchs,
-      statisticsSelected
-    );
-    const awayMatchsPresentation = getMatchPresentation(
-      awayLastMatchs,
-      statisticsSelected
-    );
+    const homeMatchsPresentation =
+      statisticsType === "Por partida"
+        ? getMatchPresentation(homeLastMatchs, statisticsSelected)
+        : getMatchPresentationMedium(
+            match,
+            "home",
+            homeLastMatchs,
+            statisticsSelected
+          );
+
+    const awayMatchsPresentation =
+      statisticsType === "Por partida"
+        ? getMatchPresentation(awayLastMatchs, statisticsSelected)
+        : getMatchPresentationMedium(
+            match,
+            "away",
+            awayLastMatchs,
+            statisticsSelected
+          );
 
     const championshipPresentation = getChampionshipPresentation(
       championship,
@@ -331,6 +424,7 @@ export async function getPrevisionResponse(req, res, next) {
       homeLastMatchs,
       awayLastMatchs,
       championshipPresentation,
+      temperature,
     });
 
     res.status(200).json({
@@ -353,6 +447,9 @@ export async function getPrevisionResponse(req, res, next) {
         shotsLearning,
         statisticsSelected,
         statisticsChampionshipSelected,
+        historicType,
+        statisticsType,
+        temperature,
       },
       response: {
         prevision: response.choices[0].message.content,
@@ -370,6 +467,8 @@ export async function getPrevisionResponse(req, res, next) {
         shotsLearning,
         statisticsSelected,
         statisticsChampionshipSelected,
+        historicType,
+        statisticsType,
       },
       response: {
         prevision: response.choices[0].message.content,

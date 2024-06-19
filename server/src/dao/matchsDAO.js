@@ -617,6 +617,60 @@ export default class matchsDAO {
     }
   }
 
+  static async getHomePastMatchsByTeamWithLimit(id, date, limitCount) {
+    try {
+      const pipeline = [
+        {
+          $match: {
+            $or: [{ "teams.homeId": id }],
+            date: { $lt: date },
+            status: { $eq: "ENCERRADO" },
+          },
+        },
+        {
+          $sort: {
+            date: -1,
+          },
+        },
+        { $limit: limitCount },
+      ];
+
+      return await matchs.aggregate(pipeline).toArray();
+    } catch (e) {
+      console.error(
+        `Something went wrong in getHomePastMatchsByTeamWithLimit: ${e}`
+      );
+      throw e;
+    }
+  }
+
+  static async getAwayPastMatchsByTeamWithLimit(id, date, limitCount) {
+    try {
+      const pipeline = [
+        {
+          $match: {
+            $or: [{ "teams.awayId": id }],
+            date: { $lt: date },
+            status: { $eq: "ENCERRADO" },
+          },
+        },
+        {
+          $sort: {
+            date: -1,
+          },
+        },
+        { $limit: limitCount },
+      ];
+
+      return await matchs.aggregate(pipeline).toArray();
+    } catch (e) {
+      console.error(
+        `Something went wrong in getAwayPastMatchsByTeamWithLimit: ${e}`
+      );
+      throw e;
+    }
+  }
+
   static async updateYesterday(match, dateToday) {
     try {
       if (match?.date < dateToday && match?.status !== "ENCERRADO") {

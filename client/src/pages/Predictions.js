@@ -15,6 +15,9 @@ export function Predictions() {
 
   const [model, setModel] = useState("gpt-3.5-turbo");
   const [shotsLearning, setShotsLearning] = useState("One-shot");
+  const [historicType, setHistoricType] = useState("Todas");
+  const [statisticsType, setStatisticsType] = useState("Por partida");
+  const [temperature, setTemperature] = useState("1");
   const [matchsCounter, setMatchsCounter] = useState(6);
   const [statisticsSelected, setStatisticsSelected] = useState([]);
   const [statisticsChampionshipSelected, setStatisticsChampionshipSelected] =
@@ -110,6 +113,9 @@ export function Predictions() {
           matchsCounter,
           statisticsSelected,
           statisticsChampionshipSelected,
+          historicType,
+          statisticsType,
+          temperature,
           matchSelected: id,
         })
         .then((response) => {
@@ -284,6 +290,25 @@ export function Predictions() {
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="formBasicRadio4">
+                <Form.Label className="me-4 bold">Temperatura</Form.Label>
+
+                <div className="rows-radio-1">
+                  {["0", "1", "2"].map((item, i) => (
+                    <Form.Check
+                      key={i}
+                      inline
+                      label={item}
+                      name="radio6"
+                      type="radio"
+                      checked={temperature === item}
+                      onChange={(event) => setTemperature(event.target.id)}
+                      id={item}
+                    />
+                  ))}
+                </div>
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="formBasicRadio4">
                 <Form.Label className="me-4 bold">
                   Número de exemplos para o modelo
                 </Form.Label>
@@ -326,6 +351,27 @@ export function Predictions() {
                   ))}
                 </div>
               </Form.Group>
+
+              <Form.Group className="mb-3" controlId="formBasicRadio4">
+                <Form.Label className="me-4 bold">
+                  Histórico de partidas a serem analisadas
+                </Form.Label>
+
+                <div className="rows-radio-1">
+                  {["Todas", "Apenas mandante ou visitante"].map((item, i) => (
+                    <Form.Check
+                      key={i}
+                      inline
+                      label={item}
+                      name="radio5"
+                      type="radio"
+                      checked={historicType === item}
+                      onChange={(event) => setHistoricType(event.target.id)}
+                      id={item}
+                    />
+                  ))}
+                </div>
+              </Form.Group>
             </Col>
 
             <Col md={3} sm={10} xs={10}>
@@ -350,6 +396,27 @@ export function Predictions() {
                         (value) => value === item
                       )}
                       onChange={(event) => changeStatisticsSelected(event)}
+                      id={item}
+                    />
+                  ))}
+                </div>
+              </Form.Group>
+
+              <Form.Group className="mb-3" controlId="formBasicCheckbox1">
+                <Form.Label className="me-4 bold">
+                  Apresentação das estatísticas
+                </Form.Label>
+
+                <div className="rows-radio-1">
+                  {["Por partida", "Por média"].map((item, i) => (
+                    <Form.Check
+                      key={i}
+                      inline
+                      label={item}
+                      name="radio7"
+                      type="radio"
+                      checked={statisticsType === item}
+                      onChange={(event) => setStatisticsType(event.target.id)}
                       id={item}
                     />
                   ))}
