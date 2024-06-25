@@ -59,7 +59,7 @@ export default class newsCrawler {
                 if (err) console.log("Error: " + err);
                 var $ = load(body);
 
-                $("#fsNews > div:nth-child(1) > article").each(function (
+                $("#fsNews > div:nth-child(2) > article").each(function (
                   idx,
                   e
                 ) {

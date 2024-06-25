@@ -11,8 +11,6 @@ import championshipsController from "./src/api/championships.controller.js";
 import teamsController from "./src/api/teams.controller.js";
 import championshipsExtraDataCrawler from "./src/crawler/championshipsExtraData.js";
 import nextMatchsCrawler from "./src/crawler/nextMatchs.js";
-import matchsDAO from "./src/dao/matchsDAO.js";
-import teamsDAO from "./src/dao/teamsDAO.js";
 
 const app = express();
 
@@ -146,10 +144,10 @@ setTimeout(() => {
   setInterval(scrapTeamsAway, process.env.CRAWLERINTERVALLONG);
 }, 3600000);
 
-setTimeout(() => {
-  scrapExtraDataChampionships();
-  setInterval(scrapExtraDataChampionships, process.env.CRAWLERINTERVALDAY);
-}, 5400000);
+// setTimeout(() => {
+//   scrapExtraDataChampionships();
+//   setInterval(scrapExtraDataChampionships, process.env.CRAWLERINTERVALDAY);
+// }, 5400000);
 
 setTimeout(() => {
   scrapNextMatchs();
