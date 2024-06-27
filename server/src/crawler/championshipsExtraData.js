@@ -2,15 +2,15 @@ import { load } from "cheerio";
 import axios from "axios";
 
 const urls = [
-  "https://fbref.com/en/comps/20/Bundesliga-Stats",
-  "https://fbref.com/en/comps/12/La-Liga-Stats",
-  "https://fbref.com/en/comps/11/Serie-A-Stats",
-  "https://fbref.com/en/comps/13/Ligue-1-Stats",
-  "https://fbref.com/en/comps/9/Premier-League-Stats",
+  // "https://fbref.com/en/comps/20/Bundesliga-Stats",
+  // "https://fbref.com/en/comps/12/La-Liga-Stats",
+  // "https://fbref.com/en/comps/11/Serie-A-Stats",
+  // "https://fbref.com/en/comps/13/Ligue-1-Stats",
+  // "https://fbref.com/en/comps/9/Premier-League-Stats",
   "https://fbref.com/en/comps/24/Serie-A-Stats",
-  "https://fbref.com/en/comps/10/Championship-Stats",
-  "https://fbref.com/en/comps/23/Eredivisie-Stats",
-  "https://fbref.com/en/comps/32/Primeira-Liga-Stats",
+  // "https://fbref.com/en/comps/10/Championship-Stats",
+  // "https://fbref.com/en/comps/23/Eredivisie-Stats",
+  // "https://fbref.com/en/comps/32/Primeira-Liga-Stats",
 ];
 const championships = [];
 
