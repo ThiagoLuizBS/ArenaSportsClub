@@ -1,5 +1,5 @@
 export const inputObject = {
-  matchSelected: arrayMatchsId,
+  matchSelected: "6623",
   matchsCounter: 6,
   historicType: ["Todas", "Apenas mandante ou visitante"],
   statisticsType: ["Por partida", "Por média"],

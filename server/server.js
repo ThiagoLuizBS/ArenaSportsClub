@@ -12,6 +12,8 @@ import teamsController from "./src/api/teams.controller.js";
 import championshipsExtraDataCrawler from "./src/crawler/championshipsExtraData.js";
 import nextMatchsCrawler from "./src/crawler/nextMatchs.js";
 import { getPrevision } from "./src/gpt/prevision.js";
+import { arrayMatchsId } from "./src/gpt/matchs.js";
+import fs from "fs";
 
 const app = express();
 
@@ -24,6 +26,10 @@ function dataHorarioAtual() {
     minute: "2-digit",
     second: "2-digit",
   });
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function scrapMatchs() {
@@ -111,6 +117,45 @@ async function updateTeams() {
   console.log(result);
 }
 
+async function loopPrevision(idMatch) {
+  await sleep(4000);
+  const response = await getPrevision(
+    idMatch,
+    6,
+    "Apenas mandante ou visitante",
+    "Por partida",
+    "1",
+    "gpt-4o",
+    "One-shot",
+    [
+      "Posse de bola (%)",
+      "Total de passes",
+      "Passes corretos (%)",
+      "Total de chutes",
+      "Chutes no gol",
+      "Escanteios",
+      "Faltas cometidas",
+    ],
+    []
+  );
+  console.log(
+    idMatch,
+    "+",
+    response.response.prevision,
+    "+",
+    response.response.promptTokens,
+    "+",
+    response.response.responseTokens
+  );
+
+  return {
+    idMatch: idMatch,
+    prevision: response.response.prevision,
+    promptTokens: response.response.promptTokens,
+    responseTokens: response.response.responseTokens,
+  };
+}
+
 app.use(cors());
 app.use(express.json());
 app.use((req, res, next) => {
@@ -121,32 +166,27 @@ app.use("/api/v1/football", football);
 app.use("*", (req, res) => res.status(404).json({ error: "not found" }));
 
 // setTimeout(async () => {
-//   const response = await getPrevision(
-//     "6623",
-//     6,
-//     "Todas",
-//     "Por média",
-//     "1",
-//     "gpt-3.5-turbo",
-//     "One-shot",
-//     [
-//       "Posse de bola (%)",
-//       "Total de passes",
-//       "Passes corretos (%)",
-//       "Total de chutes",
-//       "Chutes no gol",
-//       "Escanteios",
-//       "Faltas cometidas",
-//     ],
-//     ["Posição", "Pts/J/V/E/D", "GM/GS/SG", "xG/xGA/xGD", "Sh/SoT/SoT%"]
-//   );
-//   console.log(response);
+//   const allSimulated = [];
+//   for (let i = 0; i < arrayMatchsId.length; i++) {
+//     const response = await loopPrevision(arrayMatchsId[i]);
+//     allSimulated.push(response);
+//   }
+
+//   const jsonData = JSON.stringify(allSimulated, null, 2);
+
+//   fs.writeFile("data11.json", jsonData, (err) => {
+//     if (err) {
+//       console.error("Erro ao salvar o arquivo:", err);
+//     } else {
+//       console.log("Arquivo salvo com sucesso!");
+//     }
+//   });
 // }, 5000);
 
-// setTimeout(() => {
-//   scrapMatchs();
-//   setInterval(scrapMatchs, process.env.CRAWLERINTERVALSHORT);
-// }, 600000);
+setTimeout(() => {
+  scrapMatchs();
+  setInterval(scrapMatchs, process.env.CRAWLERINTERVALSHORT);
+}, 600000);
 
 setTimeout(() => {
   scrapChampionships();
