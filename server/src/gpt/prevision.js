@@ -207,7 +207,8 @@ function getChampionshipPresentation(
   let statisticsHomeResume = [];
   let statisticsAwayResume = [];
 
-  if (statisticsChampionshipSelected.length < 1) return "";
+  if (statisticsChampionshipSelected.length < 1 || !!!championship.extraTable)
+    return "";
 
   championship.table[0].table.forEach((team, idx) => {
     if (team.team === match.teams.homeName) {

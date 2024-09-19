@@ -739,6 +739,20 @@ export function Predictions() {
             Prompts
           </p>
 
+          <p
+            style={{
+              fontSize: "12px",
+              fontWeight: "semibold",
+              textAlign: "center",
+              color: "red",
+            }}
+          >
+            Caso tenha selecionado algumas estatísticas de campeonato e o prompt
+            de campeonatos estiver vazio, isso significa que o campeonato da
+            partida selecionada não possui os dados disponíveis na nossa base de
+            dados.
+          </p>
+
           <div
             style={{
               display: "flex",
