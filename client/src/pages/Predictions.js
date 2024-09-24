@@ -282,6 +282,7 @@ export function Predictions() {
                       name="radio1"
                       type="radio"
                       checked={model === item}
+                      disabled
                       onChange={(event) => setModel(event.target.id)}
                       id={item}
                     />
