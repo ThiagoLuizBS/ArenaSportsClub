@@ -482,7 +482,7 @@ export function Predictions() {
             <div className="championship-results">
               <Link
                 target="_blank"
-                to={`/campeonato/${response.data.idChampionship}`}
+                to={`/campeonato/${response.data.championship.idChampionship}`}
                 className="link-results"
               >
                 <span className="text-championship-results">
@@ -793,11 +793,11 @@ export function Predictions() {
             alignItems: "center",
           }}
         >
-          <Spinner animation="border" />
-          {!loading && (
-            <span style={{ margin: "0 16px" }}>
-              Aguardando geração da previsão
-            </span>
+          {loading && (
+            <>
+              <Spinner animation="border" />
+              <span style={{ margin: "0 16px" }}>Gerando previsão</span>
+            </>
           )}
         </div>
       )}
