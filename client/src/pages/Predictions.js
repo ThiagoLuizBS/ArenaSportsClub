@@ -460,8 +460,31 @@ export function Predictions() {
           </div>
 
           <div className="button-predict">
-            <Button variant="success" type="submit">
-              Gerar previsão
+            <Button
+              variant="success"
+              type="submit"
+              disabled={loading}
+              style={{ width: "200px", height: "50px" }}
+            >
+              {loading ? (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "8px",
+                  }}
+                >
+                  <Spinner animation="border" />
+                  <span style={{ alignItems: "center", fontWeight: "bold" }}>
+                    Gerando previsão
+                  </span>
+                </div>
+              ) : (
+                <span style={{ alignItems: "center", fontWeight: "bold" }}>
+                  Gerar previsão
+                </span>
+              )}
             </Button>
           </div>
 
@@ -474,7 +497,7 @@ export function Predictions() {
         </Form>
       </div>
 
-      {response !== "" ? (
+      {response !== "" && (
         <div>
           <div
             style={{ margin: "2px", display: "flex", flexDirection: "column" }}
@@ -783,22 +806,6 @@ export function Predictions() {
               {response.prompt.championshipPresentation}
             </span>
           </div>
-        </div>
-      ) : (
-        <div
-          className="spinner-results"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {loading && (
-            <>
-              <Spinner animation="border" />
-              <span style={{ margin: "0 16px" }}>Gerando previsão</span>
-            </>
-          )}
         </div>
       )}
     </Container>
